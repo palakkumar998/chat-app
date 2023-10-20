@@ -33,7 +33,7 @@ const Login = () => {
           <span className='text-c3 font-semibold' >Or</span>
           <span className='w-5 p-[1px] bg-c3' ></span>
         </div>
-      {/* login form  */}
+        {/* login form  */}
         <form className='flex flex-col items-center gap-3 mt-5  w-[500px]'>
           <input type="email"
             placeholder='enter your email here' className='w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3 ' autoComplete='off' />
@@ -47,7 +47,7 @@ const Login = () => {
         {/* registration link */}
         <div className="flex justify-center gap-1 text-c3 mt-5">
           <span>Not a member yet ?</span>
-          <Link href="/register.js" className='font-semibold text-white underline underline-offset-3 cursor-pointer'> Register Now </Link>
+          <Link href="/register" className='font-semibold text-white underline underline-offset-3 cursor-pointer'> Register Now </Link>
         </div>
 
       </div>

@@ -4,8 +4,10 @@ import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
 
 import { auth } from '@/Firebase/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '@/Context/authContext';
 
 const Login = () => {
+  const { currentUser } = useAuth();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,7 +29,7 @@ const Login = () => {
       <div className="flex items-center flex-col">
 
         <div className="text-center">
-          <div className="text-4xl font-bold"> Login to your Account</div>
+          <div className="text-4xl font-bold"> {currentUser} to your Account</div>
           <div className="mt-3 text-c3">Connect and chat with anyone, anywhere</div>
         </div>
 

@@ -1,13 +1,13 @@
 import {createContext, useContext, useState } from "react";
 
-// create a context using createContext hook and pass a parameter
-const UserContext = createContext({children}); 
+// create a context using createContext hook 
+const UserContext = createContext(); 
 
 // export a function which return a component with some values where thier initiale value is null and true 
-export const UserProvider = () => {
+export const UserProvider = ({children}) => {
 
     // create two states using usestate hook 
-    const [currentUser, setcurrentUser] = useState(null);
+    const [currentUser, setcurrentUser] = useState("Palak Kumar");
     const [isLoading, setisLoading] = useState(true);
     return (
         <UserContext.Provider value={{ currentUser, setcurrentUser, isLoading, setisLoading }}>

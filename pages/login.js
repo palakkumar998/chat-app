@@ -1,13 +1,28 @@
 import Link from 'next/link';
-import React from 'react'
+import { useEffect, React } from 'react'
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
-
 import { auth } from '@/Firebase/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuth } from '@/Context/authContext';
+import { useRouter } from 'next/router';
+
+
 
 const Login = () => {
-  const { currentUser } = useAuth();
+
+  const router = useRouter();
+  const { currentUser, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && currentUser) {
+      router.push("/");
+
+    }
+
+  }, [currentUser, isLoading]);
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -24,7 +39,7 @@ const Login = () => {
   }
 
 
-  return (
+  return isLoading || (!isLoading && currentUser) ? ( "Loader......") : (
     <div className="h-[100vh] flex justify-center items-center bg-white">
       <div className="flex items-center flex-col">
 
@@ -36,7 +51,7 @@ const Login = () => {
         <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
           {/* // login button */}
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div className="flex items-center justify-center gap-3 text-white bg-orange-500 hover:bg-orange-600 w-full h-full rounded-md font-semibold" >
+            <div className="flex items-center justify-center gap-3 text-white bg-orange-500 hover:bg-orange-700 w-full h-full rounded-md font-semibold" >
               <IoLogoGoogle size={24} />
               <span>Login with Google</span>
             </div>

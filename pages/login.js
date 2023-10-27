@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useEffect, React } from 'react'
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
 import { auth } from '@/Firebase/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider } from 'firebase/auth';
 import { useAuth } from '@/Context/authContext';
 import { useRouter } from 'next/router';
 
@@ -11,6 +11,8 @@ import { useRouter } from 'next/router';
 const Login = () => {
 
   const router = useRouter();
+  const gProvider = new GoogleAuthProvider();
+  const fProvider = new FacebookAuthProvider();
   const { currentUser, isLoading } = useAuth();
 
   useEffect(() => {
@@ -37,6 +39,29 @@ const Login = () => {
     }
 
   }
+  // METHOD: login with your google account 
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, gProvider)
+
+    } catch (e̥rror) {
+      console.log("🚀 ~ file: login.js:47 ~ signInWithGoogle ~ e̥rror:", e̥rror)
+      console.error(error);
+
+    }
+  }
+
+  // METHOD: login with your facebook account 
+  const signInWithFacebook = async () => {
+    try {
+      await signInWithPopup(auth, fProvider)
+
+    } catch (e̥rror) {
+      console.log("🚀 ~ file: login.js:47 ~ signInWithGoogle ~ e̥rror:", e̥rror)
+      console.error(error);
+
+    }
+  }
 
 
   return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
@@ -44,20 +69,20 @@ const Login = () => {
       <div className="flex items-center flex-col">
 
         <div className="text-center">
-          <div className="text-2xl font-bold text-c1"> {currentUser} to your Account</div>
+          <div className="text-2xl font-bold text-c1"> Login to your Account</div>
           <div className="mt-3 text-c3">Connect and chat with anyone, anywhere</div>
         </div>
 
         <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
           {/* // login button */}
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div className="flex items-center justify-center gap-3 text-white bg-orange-500 hover:bg-orange-700 w-full h-full rounded-md font-semibold" >
+            <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-orange-500 hover:bg-orange-700 w-full h-full rounded-md font-semibold" >
               <IoLogoGoogle size={24} />
               <span>Login with Google</span>
             </div>
           </div>
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div className="flex items-center justify-center gap-3 text-white bg-blue-400 hover:bg-blue-600 w-full h-full rounded-md font-semibold" >
+            <div onClick={signInWithFacebook} className="flex items-center justify-center gap-3 text-white bg-blue-400 hover:bg-blue-600 w-full h-full rounded-md font-semibold" >
               <IoLogoFacebook size={24} />
               <span>Login with Facebook</span>
             </div>

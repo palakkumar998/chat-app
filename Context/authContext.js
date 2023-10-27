@@ -11,7 +11,7 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
 
     // create two states using usestate hook 
-    const [currentUser, setCurrentUser] = useState("Palak Kumar");
+    const [currentUser, setCurrentUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // METHOD 1 : this method change the state of user

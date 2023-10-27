@@ -16,9 +16,12 @@ const Home = () => {
   }, [currentUser, isLoading])
 
   return (
-    <div className='text-c1'>
-      <button onClick={signOut} >  sign out</button>
-
+    <div className="flex justify-center items-center">
+      <div className=" w-1/4 h-12 rounded-md cursor-pointer p-[1px]">
+        <div className="flex items-center justify-center gap-3 text-white bg-blue-400 hover:bg-blue-600 w-full h-full rounded-md font-semibold" >
+          <button onClick={signOut}>sign out</button>
+        </div>
+      </div>
     </div>
 
   )

@@ -39,7 +39,7 @@ const Login = () => {
   }
 
 
-  return isLoading || (!isLoading && currentUser) ? ( "Loader......") : (
+  return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
     <div className="h-[100vh] flex justify-center items-center bg-white">
       <div className="flex items-center flex-col">
 

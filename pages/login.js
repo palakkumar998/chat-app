@@ -91,26 +91,26 @@ const Login = () => {
 
 
   return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
-    <div className="h-[100vh] flex justify-center items-center bg-white">
-      <ToastMessage/>
+    <div className="h-[100vh] flex justify-center items-center bg-c1">
+      <ToastMessage />
       <div className="flex items-center flex-col">
 
         <div className="text-center">
 
-          <div className="text-2xl font-bold text-c1"> Login to your Account</div>
+          <div className="text-4xl font-bold text-white"> Login to your Account</div>
           <div className="mt-3 text-c3">Connect and chat with anyone, anywhere</div>
         </div>
 
         <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
           {/* // login button */}
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-orange-500 hover:bg-orange-700 w-full h-full rounded-md font-semibold" >
+            <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-orange-500 w-full h-full rounded-md font-semibold" >
               <IoLogoGoogle size={24} />
               <span>Login with Google</span>
             </div>
           </div>
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div onClick={signInWithFacebook} className="flex items-center justify-center gap-3 text-white bg-blue-400 hover:bg-blue-600 w-full h-full rounded-md font-semibold" >
+            <div onClick={signInWithFacebook} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-blue-400 w-full h-full rounded-md font-semibold" >
               <IoLogoFacebook size={24} />
               <span>Login with Facebook</span>
             </div>
@@ -144,7 +144,7 @@ const Login = () => {
         {/* registration link */}
         <div className="flex justify-center gap-1 text-c3 mt-5">
           <span>Not a member yet ?</span>
-          <Link href="/register" className='font-semibold text-c2 underline underline-offset-3 cursor-pointer'> Register Now </Link>
+          <Link href="/register" className='font-semibold text-c3 underline underline-offset-3 cursor-pointer'> Register Now </Link>
         </div>
 
       </div>

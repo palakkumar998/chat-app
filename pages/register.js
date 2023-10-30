@@ -3,13 +3,13 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
 import { auth } from '@/Firebase/firebase';
-import { signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useAuth } from '@/Context/authContext';
 
 const Register = () => {
 
     const router = useRouter();
-
+    // creating an instanceof google auth provider/ fb auth provider
     const gProvider = new GoogleAuthProvider();
     const fProvider = new FacebookAuthProvider();
 
@@ -24,16 +24,22 @@ const Register = () => {
 
     }, [currentUser, isLoading]);
 
-    // METHOD: this method submit the email and password and prevent the default behaviour
+    // METHOD: this method will create display name, email, password to register into firebase authetication & submit the email and password and prevent the default behaviour
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const DisplayName = e.target[0].value;
+        const displayName = e.target[0].value;
         const email = e.target[1].value;
         const password = e.target[2].value;
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const { user } = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("🚀 ~ file: register.js:37 ~ handleSubmit ~ us̥er:", user);
+
+            await updateProfile(user, {
+                displayName,
+            });
+
         } catch (er̥ror) {
             console.log("🚀 ~ file: login.js:18 ~ handleSubmit ~ er̥ror:", er̥ror)
 
@@ -74,19 +80,19 @@ const Register = () => {
 
                 <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
                     {/* // login button */}
-                    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
+                    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
                         <div
                             onClick={signInWithGoogle}
                             className="flex items-center justify-center gap-3 text-white bg-c1 w-full h-full rounded-md font-semibold" >
                             <IoLogoGoogle size={24} />
-                            <span>Login with Google</span>
+                            <span>sign up with Google</span>
                         </div>
                     </div>
                     <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
                         <div onClick={signInWithFacebook}
                             className="flex items-center justify-center gap-3 text-white bg-c1 w-full h-full rounded-md font-semibold" >
                             <IoLogoFacebook size={24} />
-                            <span>Login with Facebook</span>
+                            <span>sign up with Facebook</span>
                         </div>
                     </div>
 

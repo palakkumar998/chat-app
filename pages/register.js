@@ -9,12 +9,9 @@ import { useAuth } from '@/Context/authContext';
 const Register = () => {
 
     const router = useRouter();
-    // creating an instanceof google auth provider/ fb auth provider
-    const gProvider = new GoogleAuthProvider();
+    const gProvider = new GoogleAuthProvider(); // creating an instanceof google auth provider/ fb auth provider
     const fProvider = new FacebookAuthProvider();
-
     const { currentUser, isLoading } = useAuth();
-    // const [Email, setEmail] = useState("")
 
     useEffect(() => {
         if (!isLoading && currentUser) {
@@ -46,7 +43,7 @@ const Register = () => {
         }
 
     }
-
+    // METHOD: sign in  with your google account 
     const signInWithGoogle = async () => {
         try {
             await signInWithPopup(auth, gProvider)
@@ -58,7 +55,7 @@ const Register = () => {
         }
     }
 
-    // METHOD: login with your facebook account 
+    // METHOD: sign in  with your facebook account 
     const signInWithFacebook = async () => {
         try {
             await signInWithPopup(auth, fProvider)

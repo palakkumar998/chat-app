@@ -76,8 +76,8 @@ const Login = () => {
         },
         {
           pending: "Generating reset link",
-          success: "Reset email send to your registered email id.",
-          error: "You may have entered wrong email id!",
+          success: "Reset email send to your registered email address",
+          error: "You may have entered wrong email address",
         },
         {
           autoClose: 5000,

@@ -2,16 +2,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
-import { auth } from '@/Firebase/firebase';
+import { auth, db } from '@/Firebase/firebase';
 import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useAuth } from '@/Context/authContext';
+import { doc, setDoc } from 'firebase/firestore';
+import { profileColors } from '@/utils/constants';
+
 
 const Register = () => {
 
     const router = useRouter();
-    const gProvider = new GoogleAuthProvider(); // creating an instanceof google auth provider/ fb auth provider
+    const gProvider = new GoogleAuthProvider(); //? creating an instanceof google auth provider/ fb auth provider
     const fProvider = new FacebookAuthProvider();
     const { currentUser, isLoading } = useAuth();
+    const randomColor = Math.floor(Math.random() * profileColors.length); //? floor function helps to avoid decimal number values
 
     useEffect(() => {
         if (!isLoading && currentUser) {
@@ -31,14 +35,30 @@ const Register = () => {
 
         try {
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
-            console.log("🚀 ~ file: register.js:37 ~ handleSubmit ~ us̥er:", user);
 
+            // create collection to store email, name, password & colors for profile DP
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid,
+                email,
+                displayName,
+                color: profileColors[randomColor],
+
+            });
+
+            // create collection in database for user's chat
+            await setDoc(doc(db, "userChats", user.uid), {});
+
+            // update user name
             await updateProfile(user, {
                 displayName,
             });
 
-        } catch (er̥ror) {
-            console.log("🚀 ~ file: login.js:18 ~ handleSubmit ~ er̥ror:", er̥ror)
+            console.log("🚀 ~ file: register.js:55 ~ handleSubmit ~ us̥er:", user);
+
+            router.push("/");
+
+        } catch (error) {
+            console.error("🚀 ~ file: login.js:60 ~ handleSubmit ~ er̥ror:", error)
 
         }
 
@@ -48,8 +68,8 @@ const Register = () => {
         try {
             await signInWithPopup(auth, gProvider)
 
-        } catch (e̥rror) {
-            console.log("🚀 ~ file: login.js:47 ~ signInWithGoogle ~ e̥rror:", e̥rror)
+        } catch (error) {
+            console.log("🚀 ~ file: login.js:71 ~ signInWithGoogle ~ e̥rror:", error)
 
 
         }
@@ -60,8 +80,8 @@ const Register = () => {
         try {
             await signInWithPopup(auth, fProvider)
 
-        } catch (e̥rror) {
-            console.log("🚀 ~ file: login.js:47 ~ signInWithGoogle ~ e̥rror:", e̥rror)
+        } catch (error) {
+            console.log("🚀 ~ file: login.js:83 ~ signInWithGoogle ~ e̥rror:", error)
 
 
         }

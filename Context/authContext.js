@@ -1,5 +1,6 @@
-import { auth } from "@/Firebase/firebase";
+import { auth, db } from "@/Firebase/firebase";
 import { onAuthStateChanged, signOut as authSignOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { createContext, useContext, useState, useEffect } from "react";
 
 
@@ -15,7 +16,7 @@ export const UserProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     // METHOD 1 : this method change the state of user
-    const authStateChanged = (user) => {
+    const authStateChanged = async (user) => {
         setIsLoading(true);
 
         // check user is exist or not
@@ -23,7 +24,10 @@ export const UserProvider = ({ children }) => {
             clear();
             return
         }
-        setCurrentUser(user)
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+
+        setCurrentUser(userDoc.data());
         setIsLoading(false);
     }
 

@@ -104,13 +104,13 @@ const Login = () => {
         <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
           {/* // login button */}
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-orange-500 w-full h-full rounded-md font-semibold" >
+            <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-c5 w-full h-full rounded-md font-semibold" >
               <IoLogoGoogle size={24} />
               <span>Login with Google</span>
             </div>
           </div>
           <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-            <div onClick={signInWithFacebook} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-blue-400 w-full h-full rounded-md font-semibold" >
+            <div onClick={signInWithFacebook} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-c5 w-full h-full rounded-md font-semibold" >
               <IoLogoFacebook size={24} />
               <span>Login with Facebook</span>
             </div>
@@ -127,13 +127,13 @@ const Login = () => {
 
           <input type="email"
             placeholder='enter your email here'
-            className='w-full h-14 bg-slate-300 rounded-xl outline-none border-none px-5 text-c3 '
+            className='w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3 '
             autoComplete='off'
             onChange={(e) => setEmail(e.target.value)} />
 
           <input type="password"
             placeholder='enter your password here'
-            className='w-full h-14 bg-slate-300 rounded-xl outline-none border-none px-5 text-c3 '
+            className='w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3 '
             autoComplete='off' />
 
           <div className="text-right w-full text-c3">

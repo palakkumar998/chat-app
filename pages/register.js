@@ -96,22 +96,23 @@ const Register = () => {
                 </div>
 
                 <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
-                    {/* // login button */}
-                    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
-                        <div
-                            onClick={signInWithGoogle}
-                            className="flex items-center justify-center gap-3 text-white bg-c1 w-full h-full rounded-md font-semibold" >
+                
+                
+                    <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
+                        <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-c5 w-full h-full rounded-md font-semibold" >
                             <IoLogoGoogle size={24} />
-                            <span>sign up with Google</span>
+                            <span>Sign up with Google</span>
                         </div>
                     </div>
-                    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
+
+                    <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
                         <div onClick={signInWithFacebook}
-                            className="flex items-center justify-center gap-3 text-white bg-c1 w-full h-full rounded-md font-semibold" >
+                            className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-c5 w-full h-full rounded-md font-semibold" >
                             <IoLogoFacebook size={24} />
                             <span>sign up with Facebook</span>
                         </div>
                     </div>
+
 
                 </div>
                 <div className="flex items-center gap-1">

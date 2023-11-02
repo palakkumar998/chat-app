@@ -87,10 +87,10 @@ const Register = () => {
         }
     }
     return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
-        <div className="h-[100vh] flex justify-center items-center bg-c1">
-            <div className="flex items-center flex-col">
+        <div className="h-[100vh] flex justify-center items-center bg-c1 ">
+            <div className="flex items-center flex-col border border-gray-500 py-7 px-7 rounded-2xl   ">
 
-                <div className="text-center">
+                <div className="text-center ">
                     <div className="text-4xl font-bold"> Create a new Account</div>
                     <div className="mt-3 text-c3">Connect and chat with anyone, anywhere</div>
                 </div>
@@ -109,7 +109,7 @@ const Register = () => {
                         <div onClick={signInWithFacebook}
                             className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-c5 w-full h-full rounded-md font-semibold" >
                             <IoLogoFacebook size={24} />
-                            <span>sign up with Facebook</span>
+                            <span>Sign up with Facebook</span>
                         </div>
                     </div>
 

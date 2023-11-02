@@ -93,7 +93,7 @@ const Login = () => {
   return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
     <div className="h-[100vh] flex justify-center items-center bg-c1">
       <ToastMessage />
-      <div className="flex items-center flex-col">
+      <div className="flex items-center flex-col border border-gray-500 py-7 px-7 rounded-2xl">
 
         <div className="text-center">
 

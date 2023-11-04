@@ -7,6 +7,7 @@ import { useAuth } from '@/Context/authContext';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import ToastMessage from '@/Components/ToastMessage';
+import Loader from '@/Components/Loader';
 
 
 
@@ -90,7 +91,7 @@ const Login = () => {
   };
 
 
-  return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
+  return isLoading || (!isLoading && currentUser) ? <Loader/> : (
     <div className="h-[100vh] flex justify-center items-center bg-c1">
       <ToastMessage />
       <div className="flex items-center flex-col border border-gray-500 py-7 px-7 rounded-2xl">

@@ -7,6 +7,7 @@ import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, createUserWi
 import { useAuth } from '@/Context/authContext';
 import { doc, setDoc } from 'firebase/firestore';
 import { profileColors } from '@/utils/constants';
+import Loader from '@/Components/Loader';
 
 
 const Register = () => {
@@ -53,12 +54,12 @@ const Register = () => {
                 displayName,
             });
 
-            console.log("🚀 ~ file: register.js:55 ~ handleSubmit ~ us̥er:", user);
+            console.log("🚀 ~ file: register.js:56 ~ handleSubmit ~ us̥er:", user);
 
             router.push("/");
 
         } catch (error) {
-            console.error("🚀 ~ file: login.js:60 ~ handleSubmit ~ er̥ror:", error)
+            console.error("🚀 ~ file: login.js:61 ~ handleSubmit ~ er̥ror:", error)
 
         }
 
@@ -69,7 +70,7 @@ const Register = () => {
             await signInWithPopup(auth, gProvider)
 
         } catch (error) {
-            console.log("🚀 ~ file: login.js:71 ~ signInWithGoogle ~ e̥rror:", error)
+            console.log("🚀 ~ file: login.js:72 ~ signInWithGoogle ~ e̥rror:", error)
 
 
         }
@@ -86,7 +87,7 @@ const Register = () => {
 
         }
     }
-    return isLoading || (!isLoading && currentUser) ? ("Loader......") : (
+    return isLoading || (!isLoading && currentUser) ? <Loader /> : (
         <div className="h-[100vh] flex justify-center items-center bg-c1 ">
             <div className="flex items-center flex-col border border-gray-500 py-7 px-7 rounded-2xl   ">
 
@@ -96,8 +97,8 @@ const Register = () => {
                 </div>
 
                 <div className="flex items-center gap-2 w-full mt-10 mb-5 ">
-                
-                
+
+
                     <div className=" w-1/2 h-14 rounded-md cursor-pointer p-[1px]">
                         <div onClick={signInWithGoogle} className="flex items-center justify-center gap-3 text-white bg-slate-800 hover:bg-c5 w-full h-full rounded-md font-semibold" >
                             <IoLogoGoogle size={24} />

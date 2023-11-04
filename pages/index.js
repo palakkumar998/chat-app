@@ -1,3 +1,5 @@
+import LeftNav from '@/Components/LeftNav'
+import Loader from '@/Components/Loader'
 import { useAuth } from '@/Context/authContext'
 import { useRouter } from 'next/router'
 import { React, useEffect } from 'react'
@@ -15,11 +17,14 @@ const Home = () => {
 
   }, [currentUser, isLoading])
 
-  return (
-    <div className="flex justify-center items-center">
-      <div className=" w-1/4 h-12 rounded-md cursor-pointer p-[1px]">
-        <div className="flex items-center justify-center gap-3 text-white bg-blue-400 hover:bg-blue-600 w-full h-full rounded-md font-semibold" >
-          <button onClick={signOut}>sign out</button>
+  return isLoading || !currentUser ? <Loader /> : (
+
+    <div className="bg-c1 flex w-full h-[100vh]">
+      <div className="flex w-full shrink-0">
+        <LeftNav />
+        <div className="flex bg-c2 grow">
+          <div>sidebar </div>
+          <div>chat section </div>
         </div>
       </div>
     </div>

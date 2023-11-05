@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 
 const Avatar = ({ size, user, onClick }) => {
+    // custom size classes
     const s =
         size === 'small'
             ? 32
@@ -48,6 +49,7 @@ const Avatar = ({ size, user, onClick }) => {
                 </div>
             ) : (
                 <div className={`uppercase font-samibold ${f}`}>
+                    {/* // Text Display profile for Avatar */}
                     {user.displayName?.charAt(0)}
                 </div>
             )}

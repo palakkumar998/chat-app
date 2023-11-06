@@ -49,8 +49,8 @@ const Login = () => {
     try {
       await signInWithPopup(auth, gProvider)
 
-    } catch (e̥rror) {
-      console.log("🚀 ~ file: login.js:47 ~ signInWithGoogle ~ e̥rror:", e̥rror)
+    } catch (error) {
+      console.log("🚀 ~ file: login.js:47 ~ signInWithGoogle ~ e̥rror:", error)
       console.error(error);
 
     }

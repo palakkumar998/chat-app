@@ -4,11 +4,24 @@ import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
 import Icon from './Icon'
 import { FiPlus } from 'react-icons/fi'
-import { IoLogOutOutline } from 'react-icons/io5'
+import { IoClose, IoLogOutOutline } from 'react-icons/io5'
 
 const LeftNav = () => {
     const [editProfile, seteditProfile] = useState(true)
     const { currentUser, signOut } = useAuth()
+
+    const editProfileContainer = () => {
+        return (
+            <div className="relative flex flex-col items-center">
+                <Icon
+                    size="small"
+                    className="absolute top-0 right-5 hover: bg-c2"
+                    icon={<IoClose size={20} />}
+                    onClick={() => seteditProfile(false)}
+                />
+            </div>
+        )
+    }
 
     return (
         <div
@@ -17,11 +30,11 @@ const LeftNav = () => {
             } flex flex-col justify-between py-5 shrink-0 transition-all`}
         >
             {editProfile ? (
-                <span>edit profile</span>
+                editProfileContainer()
             ) : (
                 <div
                     className="relative group cursor-pointer"
-                    onClick={() => seteditProfile(true)}  
+                    onClick={() => seteditProfile(true)}
                 >
                     <Avatar size="large" user={currentUser} />
 

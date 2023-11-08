@@ -5,6 +5,7 @@ import { useAuth } from '@/Context/authContext'
 import Icon from './Icon'
 import { FiPlus } from 'react-icons/fi'
 import { IoClose, IoLogOutOutline } from 'react-icons/io5'
+import { MdPhotoCamera, MdAddAPhoto } from 'react-icons/md'
 
 const LeftNav = () => {
     const [editProfile, seteditProfile] = useState(true)
@@ -19,6 +20,19 @@ const LeftNav = () => {
                     icon={<IoClose size={20} />}
                     onClick={() => seteditProfile(false)}
                 />
+                <div className="relative group cursor-pointer">
+                    <Avatar size="xx-large" user={currentUser} />
+                    <div className="w-full h-full rounded-full top-0 left-0 justify-center items-center bg-black/0.5 absolute hidden group-hover:flex">
+                        <label htmlFor="fileUpload">
+                            {currentUser.photoURL ? (
+                                <MdPhotoCamera size={34} />
+                            ) : (
+                                <MdAddAPhoto size={34} />
+                            )}
+                        </label>
+                        <input type="file" id='fileUpload' onChange={(e)=>{}} />
+                    </div>
+                </div>
             </div>
         )
     }

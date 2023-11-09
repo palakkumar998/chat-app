@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BiEdit } from 'react-icons/bi'
+import { BiCheck, BiEdit } from 'react-icons/bi'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
@@ -7,6 +7,7 @@ import Icon from './Icon'
 import { FiPlus } from 'react-icons/fi'
 import { IoClose, IoLogOutOutline } from 'react-icons/io5'
 import { MdPhotoCamera, MdAddAPhoto, MdDeleteForever } from 'react-icons/md'
+import { profileColors } from '@/utils/constants'
 
 const LeftNav = () => {
 	const [editProfile, seteditProfile] = useState(true)
@@ -93,6 +94,20 @@ const LeftNav = () => {
 						</div>
 					</div>
 					<span className="text-c3 text-sm">{currentUser.email}</span>
+				</div>
+				{/* profile color selector */}
+				<div className="grid grid-cols-5 gap-4 mt-5">
+					{profileColors.map((color, index) => (
+						<span
+							className="w-10 h-10 flex rounded-full items-center justify-center cursor-pointer transition-transform hover:scale-125"
+							key={index}
+							style={{ backgroundColor: color }}
+						>
+							{color === currentUser.color && (
+								<BiCheck size={24} />
+							)}
+						</span>
+					))}
 				</div>
 			</div>
 		)

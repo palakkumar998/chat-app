@@ -8,11 +8,77 @@ import { FiPlus } from 'react-icons/fi'
 import { IoClose, IoLogOutOutline } from 'react-icons/io5'
 import { MdPhotoCamera, MdAddAPhoto, MdDeleteForever } from 'react-icons/md'
 import { profileColors } from '@/utils/constants'
+import { toast } from 'react-toastify'
+import ToastMessage from './ToastMessage'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db, auth } from '@/Firebase/firebase'
+import { updateProfile } from 'firebase/auth'
 
 const LeftNav = () => {
 	const [editProfile, seteditProfile] = useState(true)
-	const { currentUser, signOut } = useAuth()
+	const { currentUser, signOut, setCurrentUser } = useAuth()
 	const [nameEdited, setNameEdited] = useState(false)
+	const authUser = auth.currentUser
+
+	const handleUpdateProfile = (type, value) => {
+		// photo, color, name, photo-remove
+		let obj = { ...currentUser }
+		switch (type) {
+			case 'color':
+				obj.color = value
+				break
+
+			case 'photo':
+				obj.photoURL = value
+				break
+			case 'name':
+				obj.displayName = value
+				break
+			case 'photo-remove':
+				obj.photoURL = null
+				break
+
+			default:
+				break
+		}
+		try {
+			toast.promise(
+				async () => {
+					const userDocRef = doc(db, 'users', currentUser.uid)
+					await updateDoc(userDocRef, obj)
+					setCurrentUser(obj)
+
+					if (type === 'photo-remove') {
+						await updateProfile(authUser, {
+							photoURL: null,
+						})
+					}
+					if (type === 'name') {
+						await updateProfile(authUser, {
+							displayName: value,
+						})
+					}
+					if (type === 'color') {
+						await updateProfile(authUser, {
+							color: value,
+						})
+					}
+					setNameEdited(false)
+				},
+				{
+					pending: 'Profile Updating..',
+					success: 'Profile Upadted successfully',
+					error: 'Profile Update Failed',
+				},
+				{
+					autoClose: 3000,
+				}
+			)
+			console.log('Email send to your registered email id.')
+		} catch (error) {
+			console.error('An error occured', error)
+		}
+	}
 
 	const onkeyup = (event) => {
 		if (event.target.innertext !== currentUser.displayName) {
@@ -32,6 +98,7 @@ const LeftNav = () => {
 	const editProfileContainer = () => {
 		return (
 			<div className="relative flex flex-col items-center">
+				<ToastMessage />
 				<Icon
 					size="small"
 					className="absolute top-0 right-5 hover: bg-c2"
@@ -79,7 +146,12 @@ const LeftNav = () => {
 							<BsFillCheckCircleFill
 								className="text-c4 cursor-pointer"
 								onClick={() => {
-									// name edit logic
+									handleUpdateProfile(
+										'name',
+										document.getElementById(
+											'displayNameEdit'
+										).innerText
+									)
 								}}
 							/>
 						)}
@@ -99,9 +171,12 @@ const LeftNav = () => {
 				<div className="grid grid-cols-5 gap-4 mt-5">
 					{profileColors.map((color, index) => (
 						<span
-							className="w-10 h-10 flex rounded-full items-center justify-center cursor-pointer transition-transform hover:scale-125"
+							className="w-10 h-10 flex rounded-full items-center justify-center cursor-pointer transition-transform hover:scale-125  "
 							key={index}
 							style={{ backgroundColor: color }}
+							onClick={() => {
+								handleUpdateProfile('color', color)
+							}}
 						>
 							{color === currentUser.color && (
 								<BiCheck size={24} />

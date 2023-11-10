@@ -25,7 +25,7 @@ const Login = () => {
 
     }
 
-  }, [currentUser, isLoading]);
+  }, [currentUser, isLoading, router]);
 
 
   // METHOD: this method submit the email and password and prevent the default behaviour

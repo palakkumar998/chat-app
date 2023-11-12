@@ -11,15 +11,62 @@ import { profileColors } from '@/utils/constants'
 import { toast } from 'react-toastify'
 import ToastMessage from './ToastMessage'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db, auth } from '@/Firebase/firebase'
+import { db, auth, storage } from '@/Firebase/firebase'
 import { updateProfile } from 'firebase/auth'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 const LeftNav = () => {
 	const [editProfile, seteditProfile] = useState(true)
 	const { currentUser, signOut, setCurrentUser } = useAuth()
 	const [nameEdited, setNameEdited] = useState(false)
 	const authUser = auth.currentUser
+	//----------------------------------->/ image uploading to firebase store, progressing logic /<--------------------------------------//
+	const updloadImageToFirstore = (file) => {
+		try {
+			if (file) {
+				const storageRef = ref(storage, currentUser.displayName)
+				const uploadTask = uploadBytesResumable(storageRef, file)
 
+				uploadTask.on(
+					'state_changed',
+					(snapshot) => {
+						const progress =
+							(snapshot.bytesTransferred / snapshot.totalBytes) *
+							100
+						console.log('Upload is ' + progress + '% done')
+						switch (snapshot.state) {
+							case 'paused':
+								console.log('Upload is paused')
+								break
+							case 'running':
+								console.log('Upload is running')
+								break
+						}
+					},
+					(error) => {
+						console.error(error)
+					},
+					() => {
+						getDownloadURL(uploadTask.snapshot.ref).then(
+							async (downloadURL) => {
+								console.log('File available at', downloadURL)
+								handleUpdateProfile('photo', downloadURL)
+
+								await updateProfile(authUser, {
+									photoURL: downloadURL,
+								})
+							}
+						)
+					}
+				)
+			}
+		} catch (error) {
+			console.error(error)
+		}
+	}
+	//============>/ image uploading to firebase store, progressing logic ends here /<===============//
+
+	//--------------------------------->/ profile handaling logic / <------------------------------------//
 	const handleUpdateProfile = (type, value) => {
 		// photo, color, name, photo-remove
 		let obj = { ...currentUser }
@@ -79,7 +126,9 @@ const LeftNav = () => {
 			console.error('An error occured', error)
 		}
 	}
+	//============>/  profile handaling logic ends here/<=============//
 
+	//-----------> / display Name prevent enter in editing user name /<-----------//
 	const onkeyup = (event) => {
 		if (event.target.innertext !== currentUser.displayName) {
 			// name edited
@@ -94,7 +143,9 @@ const LeftNav = () => {
 			event.preventDefault()
 		}
 	}
+	//=======>/ display Name prevent enter in editing user name, ends here /<==========//
 
+	//------------------------------->/ profile container / <-------------------------------//
 	const editProfileContainer = () => {
 		return (
 			<div className="relative flex flex-col items-center">
@@ -106,53 +157,52 @@ const LeftNav = () => {
 					onClick={() => seteditProfile(false)}
 				/>
 				<div className="relative group cursor-pointer">
-					<Avatar size="xx-large" user={currentUser} />
+					<Avatar
+						size="xx-large"
+						user={currentUser}
+						onClick={() => seteditProfile(true)}
+					/>
 					<div className="w-full h-full rounded-full top-0 left-0 justify-center items-center bg-black/0.5 absolute hidden group-hover:flex">
 						<label htmlFor="fileUpload">
-							{
-								// Check if the currentUser object has a photoURL property
-								currentUser.photoURL ? (
-									// If photoURL exists, render the MdPhotoCamera icon
-									<MdPhotoCamera size={34} />
-								) : (
-									// If photoURL does not exist, render the MdAddAPhoto icon
-									<MdAddAPhoto size={34} />
-								)
-							}
+							{currentUser.photoURL ? (
+								<MdPhotoCamera size={34} />
+							) : (
+								<MdAddAPhoto size={34} />
+							)}
 						</label>
 
 						<input
-							type="file"
 							id="fileUpload"
-							onChange={(e) => {}}
+							type="file"
+							onChange={(e) =>
+								updloadImageToFirstore(e.target.files[0])
+							}
 							style={{ display: 'none' }}
 						/>
 					</div>
 
-					{
-						// Check if the currentUser object has a photoURL property
-						currentUser.photoURL && (
-							// If photoURL exists, render the following div element
-							<div className="w-6 h-6 rounded-full bg-red-500 flex justify-center items-center absolute right-0 bottom-0 ">
-								<MdDeleteForever size={14} />
-							</div>
-						)
-					}
+					{currentUser.photoURL && (
+						<div
+							className="w-6 h-6 rounded-full bg-red-500 flex justify-center items-center absolute right-0 bottom-0"
+							onClick={() => handleUpdateProfile('photo-remove')}
+						>
+							<MdDeleteForever size={14} />
+						</div>
+					)}
 				</div>
 				<div className="mt-5 flex flex-col items-center">
 					<div className="flex items-center gap-2">
-						{!nameEdited && <BiEdit className="text-c3" />}
 						{nameEdited && (
 							<BsFillCheckCircleFill
-								className="text-c4 cursor-pointer"
-								onClick={() => {
+								className="cursor-pointer text-c4"
+								onClick={() =>
 									handleUpdateProfile(
 										'name',
 										document.getElementById(
 											'displayNameEdit'
 										).innerText
 									)
-								}}
+								}
 							/>
 						)}
 						<div
@@ -187,6 +237,8 @@ const LeftNav = () => {
 			</div>
 		)
 	}
+
+	//============>/ profile container ends here/<==============//
 
 	return (
 		<div

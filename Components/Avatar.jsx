@@ -38,11 +38,15 @@ const Avatar = ({ size, user, onClick }) => {
 			style={{ backgroundColor: user.color }}
 			onClick={onClick}
 		>
-			{size === 'large' && (
-				<span className="w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-[2px] right-[2px]"></span>
-			)}
-			{size === 'x-large' && (
-				<span className="w-[12px] h-[12px] rounded-full bg-green-500 absolute bottom-[3px] right-[3px]"></span>
+			{user?.isOnline && (
+				<>
+					{size === 'large' && (
+						<span className="w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-[2px] right-[2px]"></span>
+					)}
+					{size === 'x-large' && (
+						<span className="w-[12px] h-[12px] rounded-full bg-green-500 absolute bottom-[3px] right-[3px]"></span>
+					)}
+				</>
 			)}
 			{user?.photoURl ? (
 				<div className={`${c} overflow-hidden rounded-full`}>

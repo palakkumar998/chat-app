@@ -14,12 +14,14 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { db, auth, storage } from '@/Firebase/firebase'
 import { updateProfile } from 'firebase/auth'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import UserPopup from './popups/UserPopup'
 
 const LeftNav = () => {
-	const [editProfile, seteditProfile] = useState(true)
+	const [editProfile, seteditProfile] = useState(false)
 	const { currentUser, signOut, setCurrentUser } = useAuth()
 	const [nameEdited, setNameEdited] = useState(false)
 	const authUser = auth.currentUser
+	const [userPopups, setuserPopups] = useState(false)
 	//----------------------------------->/ image uploading to firebase store, progressing logic /<--------------------------------------//
 	const updloadImageToFirstore = (file) => {
 		try {
@@ -270,7 +272,9 @@ const LeftNav = () => {
 					size="x-large"
 					className="bg-green-500 hover:bg-gray-600"
 					icon={<FiPlus size={24} />}
-					onClick={() => {}}
+					onClick={() => {
+						setuserPopups(!userPopups)
+					}}
 				/>
 
 				{/* // icon for log out user  */}
@@ -281,6 +285,12 @@ const LeftNav = () => {
 					onClick={signOut}
 				/>
 			</div>
+			{userPopups && (
+				<UserPopup
+					onHide={() => setuserPopups(false)}
+					title="Find Users"
+				/>
+			)}
 		</div>
 	)
 }

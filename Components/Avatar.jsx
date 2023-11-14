@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 
 const Avatar = ({ size, user, onClick }) => {
-	// custom size classes
+	//?---------------->?/ CUSTOM SIZE CLASSES /<-----------------//
 	const s =
 		size === 'small'
 			? 32
@@ -38,6 +38,7 @@ const Avatar = ({ size, user, onClick }) => {
 			style={{ backgroundColor: user.color }}
 			onClick={onClick}
 		>
+			{/* //?----------->/ ONLINE STATUS OF USER /<-----------------*/}
 			{user?.isOnline && (
 				<>
 					{size === 'large' && (
@@ -48,6 +49,8 @@ const Avatar = ({ size, user, onClick }) => {
 					)}
 				</>
 			)}
+
+			{/* //?----------->/ USER PROFILE PICTURE AND FIRST NAME LETTER LOGIC /<-----------------*/}
 			{user?.photoURl ? (
 				<div className={`${c} overflow-hidden rounded-full`}>
 					<Image

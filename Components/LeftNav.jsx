@@ -75,7 +75,7 @@ const LeftNav = () => {
 
 	//?------------------->/ PROFILE HANDLING LOGIC / <-------------------//
 	const handleUpdateProfile = (type, value) => {
-		// photo, color, name, photo-remove
+		//?UPADATE TYPE------> (photo, color, name, photo-remove)
 		let obj = { ...currentUser }
 		switch (type) {
 			case 'color':

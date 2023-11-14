@@ -1,20 +1,24 @@
+//?IMPORTING FROM REACT
 import React, { useState } from 'react'
 import { BiCheck, BiEdit } from 'react-icons/bi'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
-import Avatar from './Avatar'
-import { useAuth } from '@/Context/authContext'
-import Icon from './Icon'
 import { FiPlus } from 'react-icons/fi'
-import { IoClose, IoLogOutOutline } from 'react-icons/io5'
 import { MdPhotoCamera, MdAddAPhoto, MdDeleteForever } from 'react-icons/md'
-import { profileColors } from '@/utils/constants'
+import { IoClose, IoLogOutOutline } from 'react-icons/io5'
 import { toast } from 'react-toastify'
+//?IMPORTING FROM COMPONENTS
+import Avatar from './Avatar'
+import Icon from './Icon'
 import ToastMessage from './ToastMessage'
+import UserPopup from './popups/UserPopup'
+//?IMPORTING FROM CONTEXT
+import { useAuth } from '@/Context/authContext'
+import { profileColors } from '@/utils/constants'
+//?IMPORTING FROM FIREBASE/FIRESTORE/STORAGE/AUTH
 import { doc, updateDoc } from 'firebase/firestore'
 import { db, auth, storage } from '@/Firebase/firebase'
 import { updateProfile } from 'firebase/auth'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import UserPopup from './popups/UserPopup'
 
 const LeftNav = () => {
 	const [editProfile, seteditProfile] = useState(false)
@@ -22,7 +26,8 @@ const LeftNav = () => {
 	const [nameEdited, setNameEdited] = useState(false)
 	const authUser = auth.currentUser
 	const [userPopups, setuserPopups] = useState(false)
-	//----------------------------------->/ image uploading to firebase store, progressing logic /<--------------------------------------//
+
+	//?------------------>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC /<----------------------//
 	const updloadImageToFirstore = (file) => {
 		try {
 			if (file) {
@@ -66,9 +71,9 @@ const LeftNav = () => {
 			console.error(error)
 		}
 	}
-	//============>/ image uploading to firebase store, progressing logic ends here /<===============//
+	//*============>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC ENDS HERE /<===============//
 
-	//--------------------------------->/ profile handaling logic / <------------------------------------//
+	//?------------------->/ PROFILE HANDLING LOGIC / <-------------------//
 	const handleUpdateProfile = (type, value) => {
 		// photo, color, name, photo-remove
 		let obj = { ...currentUser }
@@ -128,9 +133,9 @@ const LeftNav = () => {
 			console.error('An error occured', error)
 		}
 	}
-	//============>/  profile handaling logic ends here/<=============//
+	//*============>/ PROFILE HANDLING LOGIC ENDS HERE/<=============//
 
-	//-----------> / display Name prevent enter in editing user name /<-----------//
+	//?-----------> / DISPLAY NAME & PREVENT UNUSAUL EDITING IN USER NAME /<-----------//
 	const onkeyup = (event) => {
 		if (event.target.innertext !== currentUser.displayName) {
 			// name edited
@@ -145,9 +150,9 @@ const LeftNav = () => {
 			event.preventDefault()
 		}
 	}
-	//=======>/ display Name prevent enter in editing user name, ends here /<==========//
+	//*=======>/ DISPLAY NAME & PREVENT UNUSAUL EDITING IN USER NAME ENDS HERE/<==========//
 
-	//------------------------------->/ profile container / <-------------------------------//
+	//?------------------------------->/ PROFILE CONTAINER / <-------------------------------//
 	const editProfileContainer = () => {
 		return (
 			<div className="relative flex flex-col items-center">
@@ -240,7 +245,9 @@ const LeftNav = () => {
 		)
 	}
 
-	//============>/ profile container ends here/<==============//
+	//*============>/ PROFILE CONTAINER ENDS HERE/<==============//
+
+	//?------------->/ RETURNING COMPONENT /<-------------------//
 
 	return (
 		<div

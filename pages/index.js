@@ -1,8 +1,10 @@
+import Chats from '@/Components/Chats'
 import LeftNav from '@/Components/LeftNav'
 import Loader from '@/Components/Loader'
 import { useAuth } from '@/Context/authContext'
 import { useRouter } from 'next/router'
 import { React, useEffect } from 'react'
+
 
 
 
@@ -15,7 +17,7 @@ const Home = () => {
       router.push("/login")
     }
 
-  }, [currentUser, isLoading])
+  }, [currentUser, isLoading, router])
 
   return isLoading || !currentUser ? <Loader /> : (
 
@@ -23,7 +25,9 @@ const Home = () => {
       <div className="flex w-full shrink-0">
         <LeftNav />
         <div className="flex bg-c2 grow">
-          <div>sidebar </div>
+          <div className='w-[400px] shrink-0 border-r border-white/[0.05] p-5 overflow-auto scrollbar' >
+            <div className='flex flex-col h-full'> <Chats /> </div>
+          </div>
           <div>chat section </div>
         </div>
       </div>

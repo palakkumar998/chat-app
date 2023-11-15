@@ -1,14 +1,25 @@
-import React from 'react'
+import { userChatContext } from '@/Context/ChatContext'
+import { db } from '@/Firebase/firebase'
+import { collection, doc, onSnapshot } from 'firebase/firestore'
+import React, { useEffect } from 'react'
 
 const Chats = () => {
+	const { users, setUsers } = userChatContext()
+
+	useEffect(() => {
+		onSnapshot(collection(db, 'users'), (snapshot) => {
+			const updatedUsers = {}
+			snapshot.forEach((doc) => {
+				updatedUsers[doc.id] = doc.data()
+				console.log(doc.data())
+			})
+			setUsers(updatedUsers)
+		})
+	}, [])
+
 	return (
 		<div>
-            Chat 
-            <br />
-			Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe
-			deserunt odio voluptas recusandae cupiditate similique asperiores
-			praesentium. Libero sequi, omnis cupiditate quidem doloribus quos
-			sapiente est ut hic, vel aut.
+			chat
 		</div>
 	)
 }

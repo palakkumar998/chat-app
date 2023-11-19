@@ -11,10 +11,12 @@ import {
 	updateDoc,
 } from 'firebase/firestore'
 import { db } from '@/Firebase/firebase'
+import Search from '../Search'
 // import { db } from '@/Firebase/firebase'
 
-const UserPopup = (
-	props) => {
+
+
+const UserPopup = (props) => {
 	const { currentUser } = useAuth()
 	const { users, dispatch } = userChatContext()
 
@@ -77,6 +79,7 @@ const UserPopup = (
 	}
 	return (
 		<PopupWrapper {...props}>
+			<Search/>
 			<div className="mt-5 flex flex-col gap-2 grow relative overflow-auto scrollbar ">
 				<div className="absolute w-full">
 					{users &&

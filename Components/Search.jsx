@@ -1,10 +1,35 @@
+import { db } from '@/Firebase/firebase'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import React, { useState } from 'react'
 import { RiSearch2Line } from 'react-icons/ri'
 
 const Search = () => {
-	const [username, setusername] = useState('')
+	const [username, setUserName] = useState('')
+	const [user, setUser] = useState(null)
+	const [err, setErr] = useState(false)
 
-	const onkeyup = () => {}
+	const onkeyup = async (e) => {
+		if (e.code === "Enter" && !!username) {
+			try {
+				setErr(false)
+				const usersRef = collection(db, 'users')
+				const q = query(usersRef, where('displayName', "==", username))
+
+				const querySnapshot = await getDocs(q)
+				if (querySnapshot.empty) {
+					setErr(true)
+					setUser(null)
+				} else {
+					querySnapshot.forEach((doc) => {
+						setUser(doc.data())
+					})
+				}
+			} catch (error) {
+				console.error(error)
+				setErr(error)
+			}
+		}
+	}
 	return (
 		<div className="shrink-0 ">
 			<div className="relative">
@@ -12,8 +37,8 @@ const Search = () => {
 				<input
 					type="text"
 					placeholder="Search User..."
-					onChange={(e) => setusername(e.target.value)}
-					onKeyUp={() => {}}
+					onChange={(e) => setUserName(e.target.value)}
+					onKeyUp={onkeyup}
 					value={username}
 					autoFocus
 					className="w-full h-12 bg-c1/[0.5] rounded-xl pl-11  pr-16 placeholder:text-c3 outline-none text-base"

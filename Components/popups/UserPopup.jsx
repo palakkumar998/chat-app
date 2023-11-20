@@ -12,7 +12,6 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/Firebase/firebase'
 import Search from '../Search'
-// import { db } from '@/Firebase/firebase'
 
 
 

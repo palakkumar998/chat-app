@@ -1,17 +1,26 @@
 import { userChatContext } from '@/Context/ChatContext'
 import { db } from '@/Firebase/firebase'
-import { collection, doc, onSnapshot } from 'firebase/firestore'
+import { Timestamp, collection, doc, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { RiSearch2Line } from 'react-icons/ri'
 import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
+import { formatDate } from '@/utils/helper'
 
 const Chats = () => {
-	const { users, setUsers, chats, setChats, selectedChat, setSelectedChat } =
-		userChatContext()
+	const {
+		users,
+		setUsers,
+		chats,
+		setChats,
+		selectedChat,
+		setSelectedChat,
+		dispatch,
+	} = userChatContext()
 	const [search, setSearch] = useState('')
 	const { currentUser } = useAuth()
 
+	
 	useEffect(() => {
 		onSnapshot(collection(db, 'users'), (snapshot) => {
 			const updatedUsers = {}
@@ -22,6 +31,7 @@ const Chats = () => {
 			setUsers(updatedUsers)
 		})
 	}, [])
+
 
 	useEffect(() => {
 		const getChats = () => {
@@ -36,9 +46,20 @@ const Chats = () => {
 			)
 		}
 
-		currentUser.uid && getChats();
+		currentUser.uid && getChats()
 	}, [])
 
+	//?---------->/ METHOD TO ARRAY & SORTING WITH TIMESTAMP /<--------------//
+	const filteredChats = Object.entries(chats || {}).sort(
+		(a, b) => b[1].date - a[1].date
+	)
+
+	console.log(filteredChats)
+
+	const handleSelect = (user, selectedChatId) => {
+		setSelectedChat(user)
+		dispatch({ type: 'CHANGE_USER', payload: user })
+	}
 	return (
 		<div className="flex flex-col h-full">
 			<div className="shrink-0 sticky -top-[20px] z-10 justify-center flex w-full bg-c2 py-5">
@@ -52,23 +73,52 @@ const Chats = () => {
 				/>
 			</div>
 			<ul className="flex flex-col w-full my-5 gap-[5px]">
-				<li
-					className={`h-[90px] flex items-center gap-4 rounded-2xl hover:bg-c1 p-4 cursor-pointer bg-c1`}
-				>
-					<Avatar size="x-large" user={currentUser} />
-					<div className="flex flex-col gap-2 grow relative">
-						<span className="text-base text-white flex items-center justify-between">
-							<div className="font-medium">User name</div>
-							<div className="text-c3 text-xs">dd-mm-yyyy</div>
-						</span>
-						<p className="text-c3 text-xs line-clamp-1 break-all">
-							Lorem ipsum tur
-						</p>
-						<span className="absolute right-0 top-7 min-w-[20px] h-5 rounded-full bg-blue-500  flex justify-center items-center text-sm">
-							5
-						</span>
-					</div>
-				</li>
+				{Object.keys(users || {}).length > 0 &&
+					filteredChats?.map((chat) => {
+						const user = users[chat[1].userInfo.uid]
+						const timestamp = new Timestamp(
+							chat[1].date.seconds,
+							chat[1].date.nanoseconds
+						)
+						const date = timestamp.toDate()
+						console.log(date)
+
+						return (
+							<>
+								<li
+									key={chat[0]}
+									onClick={() => handleSelect(user, chat[0])}
+									className={`h-[90px] flex items-center gap-4 rounded-2xl hover:bg-c1 p-4 cursor-pointer ${
+										selectedChat?.uid === user?.uid
+											? 'bg-c1'
+											: ''
+									}`}
+								>
+									<Avatar size="x-large" user={user} />
+									<div className="flex flex-col gap-2 grow relative">
+										<span className="text-base text-white flex items-center justify-between">
+											<div className="font-medium">
+												{user?.displayName}
+											</div>
+											<div className="text-c3 text-xs">
+												{formatDate(date)}
+											</div>
+										</span>
+										<p className="text-c3 text-xs line-clamp-1 break-all">
+											{chat[1]?.lastMessage?.text ||
+												(chat[1]?.lastMessage?.img &&
+													'image') ||
+												'Say hello... to   ' +
+													user.displayName}
+										</p>
+										<span className="absolute right-0 top-7 min-w-[20px] h-5 rounded-full bg-blue-500  flex justify-center items-center text-sm">
+											8
+										</span>
+									</div>
+								</li>
+							</>
+						)
+					})}
 			</ul>
 		</div>
 	)

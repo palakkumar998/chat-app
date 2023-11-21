@@ -7,7 +7,8 @@ import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
 
 const Chats = () => {
-	const { users, setUsers } = userChatContext()
+	const { users, setUsers, chats, setChats, selectedChat, setSelectedChat } =
+		userChatContext()
 	const [search, setSearch] = useState('')
 	const { currentUser } = useAuth()
 
@@ -20,6 +21,22 @@ const Chats = () => {
 			})
 			setUsers(updatedUsers)
 		})
+	}, [])
+
+	useEffect(() => {
+		const getChats = () => {
+			const unsub = onSnapshot(
+				doc(db, 'userChats', currentUser.uid),
+				(doc) => {
+					if (doc.exists()) {
+						const data = doc.data()
+						setChats(data)
+					}
+				}
+			)
+		}
+
+		currentUser.uid && getChats();
 	}, [])
 
 	return (

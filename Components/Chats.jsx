@@ -1,7 +1,7 @@
 import { userChatContext } from '@/Context/ChatContext'
 import { db } from '@/Firebase/firebase'
 import { Timestamp, collection, doc, onSnapshot } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line } from 'react-icons/ri'
 import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
@@ -20,6 +20,10 @@ const Chats = () => {
 	const [search, setSearch] = useState('')
 	const { currentUser } = useAuth()
 
+	const isBlockExecutedRef = useRef(false)
+	const isUserFetchedRef = useRef(false)
+
+	//?-------->/ FETCHING USER'S DATA /<------------//
 	useEffect(() => {
 		onSnapshot(collection(db, 'users'), (snapshot) => {
 			const updatedUsers = {}
@@ -28,9 +32,13 @@ const Chats = () => {
 				console.log(doc.data())
 			})
 			setUsers(updatedUsers)
+			if (!isBlockExecutedRef.current) {
+				isUserFetchedRef.current = true
+			}
 		})
 	}, [])
 
+	//?-------->/ FETCHING USER'S CHATS /<------------//
 	useEffect(() => {
 		const getChats = () => {
 			const unsub = onSnapshot(
@@ -39,22 +47,43 @@ const Chats = () => {
 					if (doc.exists()) {
 						const data = doc.data()
 						setChats(data)
+
+						//?-----> / THIS LOGIC WILL EXECUTE ONLY ONCE /<----------//
+						if (
+							!isBlockExecutedRef.current &&
+							isUserFetchedRef.current &&
+							users
+						) {
+							const firstChat = Object.values(data).sort(
+								(a, b) => b.data - a.date
+							)[0]
+
+							if (firstChat) {
+								const user = users[firstChat?.userInfo?.uid]
+
+								handleSelect(user)
+							}
+							isBlockExecutedRef.current = true
+						}
 					}
 				}
 			)
 		}
 
 		currentUser.uid && getChats()
-	}, [])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isBlockExecutedRef.current, users])
 
 	//?---->/ LOGIC- METHOD TO ARRAY, SEARCHING USER/EMAIL/CHATS IN SEARCHBAR & SORTING CHATS WITH CURRENT TIMESTAMP /<-------//
 	const filteredChats = Object.entries(chats || {})
-		.filter(([, chat]) =>
-			chat?.userInfo?.displayName
-				.toLowerCase()
-				.includes(search.toLowerCase()) || chat?.lastMessage?.text
-				.toLowerCase()
-				.includes(search.toLowerCase()) 
+		.filter(
+			([, chat]) =>
+				chat?.userInfo?.displayName
+					.toLowerCase()
+					.includes(search.toLowerCase()) ||
+				chat?.lastMessage?.text
+					.toLowerCase()
+					.includes(search.toLowerCase())
 		)
 		.sort((a, b) => b[1].date - a[1].date)
 

@@ -23,7 +23,7 @@ const Chats = () => {
 	const isBlockExecutedRef = useRef(false)
 	const isUserFetchedRef = useRef(false)
 
-	//?-------->/ FETCHING USER'S DATA /<------------//
+	//?-------->/ FETCHING USER'S DATA /<----------//
 	useEffect(() => {
 		onSnapshot(collection(db, 'users'), (snapshot) => {
 			const updatedUsers = {}
@@ -48,7 +48,7 @@ const Chats = () => {
 						const data = doc.data()
 						setChats(data)
 
-						//?-----> / THIS LOGIC WILL EXECUTE ONLY ONCE /<----------//
+						//?----->/ THIS LOGIC WILL EXECUTE ONLY ONCE /<----------//
 						if (
 							!isBlockExecutedRef.current &&
 							isUserFetchedRef.current &&
@@ -60,7 +60,6 @@ const Chats = () => {
 
 							if (firstChat) {
 								const user = users[firstChat?.userInfo?.uid]
-
 								handleSelect(user)
 							}
 							isBlockExecutedRef.current = true
@@ -74,7 +73,7 @@ const Chats = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isBlockExecutedRef.current, users])
 
-	//?---->/ LOGIC- METHOD TO ARRAY, SEARCHING USER/EMAIL/CHATS IN SEARCHBAR & SORTING CHATS WITH CURRENT TIMESTAMP /<-------//
+	//?----->/ LOGIC- METHOD TO ARRAY, SEARCHING USER/EMAIL/CHATS IN SEARCH-BAR & SORTING CHATS WITH CURRENT TIMESTAMP /<-------//
 	const filteredChats = Object.entries(chats || {})
 		.filter(
 			([, chat]) =>
@@ -105,7 +104,9 @@ const Chats = () => {
 					className="w-[300px] h-12 justify-center rounded-xl bg-c1/[0.5] pl-11 pr-5 placeholder:text-c3 outline-none text-base"
 				/>
 			</div>
+
 			<ul className="flex flex-col w-full my-5 gap-[5px]">
+
 				{Object.keys(users || {}).length > 0 &&
 					filteredChats?.map((chat) => {
 						const user = users[chat[1].userInfo.uid]
@@ -114,7 +115,7 @@ const Chats = () => {
 							chat[1].date.nanoseconds
 						)
 						const date = timestamp.toDate()
-						console.log(date)
+						// console.log(date)
 
 						return (
 							<>

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Avatar from './Avatar'
 import Icon from './Icon'
 import { IoEllipsisVerticalSharp } from 'react-icons/io5'
+import ChatMenu from './ChatMenu'
 
 const ChatHeader = () => {
 	const [showMenu, setshowMenu] = useState(false)
@@ -36,6 +37,9 @@ const ChatHeader = () => {
 						/>
 					}
 				/>
+				{showMenu && (
+					<ChatMenu setshowMenu={setshowMenu} showMenu={showMenu} />
+				)}
 			</div>
 		</div>
 	)

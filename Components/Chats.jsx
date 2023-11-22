@@ -20,7 +20,6 @@ const Chats = () => {
 	const [search, setSearch] = useState('')
 	const { currentUser } = useAuth()
 
-	
 	useEffect(() => {
 		onSnapshot(collection(db, 'users'), (snapshot) => {
 			const updatedUsers = {}
@@ -31,7 +30,6 @@ const Chats = () => {
 			setUsers(updatedUsers)
 		})
 	}, [])
-
 
 	useEffect(() => {
 		const getChats = () => {
@@ -49,10 +47,16 @@ const Chats = () => {
 		currentUser.uid && getChats()
 	}, [])
 
-	//?---------->/ METHOD TO ARRAY & SORTING WITH TIMESTAMP /<--------------//
-	const filteredChats = Object.entries(chats || {}).sort(
-		(a, b) => b[1].date - a[1].date
-	)
+	//?---->/ LOGIC- METHOD TO ARRAY, SEARCHING USER/EMAIL/CHATS IN SEARCHBAR & SORTING CHATS WITH CURRENT TIMESTAMP /<-------//
+	const filteredChats = Object.entries(chats || {})
+		.filter(([, chat]) =>
+			chat?.userInfo?.displayName
+				.toLowerCase()
+				.includes(search.toLowerCase()) || chat?.lastMessage?.text
+				.toLowerCase()
+				.includes(search.toLowerCase()) 
+		)
+		.sort((a, b) => b[1].date - a[1].date)
 
 	console.log(filteredChats)
 

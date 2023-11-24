@@ -111,8 +111,8 @@ const Chats = () => {
 					filteredChats?.map((chat) => {
 						const user = users[chat[1].userInfo.uid]
 						const timestamp = new Timestamp(
-							chat[1].date.seconds,
-							chat[1].date.nanoseconds
+							chat[1].date?.seconds,
+							chat[1].date?.nanoseconds
 						)
 						const date = timestamp.toDate()
 						// console.log(date)

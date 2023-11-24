@@ -14,7 +14,7 @@ export const formatDate = (date) => {
 
     //? FOR HOUR
     if (diff < 3600000) {
-        return `${Math.round(diff / minute)} min ago`;
+        return `${Math.round(diff / 60000)} min ago`;
     }
 
 

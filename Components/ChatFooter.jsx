@@ -7,21 +7,69 @@ import EmojiPicker from 'emoji-picker-react'
 import ClickAwayListener from 'react-click-away-listener'
 import { userChatContext } from '@/Context/ChatContext'
 import { IoClose } from 'react-icons/io5'
+import { MdDeleteForever } from 'react-icons/md'
 
 const ChatFooter = () => {
-	const onEmojiClick = () => {}
 	const [showImojiPicker, setshowImojiPicker] = useState(false)
-	const { isTyping, editMsg, setEditMsg } = userChatContext()
+	const {
+		inputText,
+		setInputText,
+
+		attachment,
+		setAttachment,
+
+		attachmentPreview,
+		setAttachmentPreview,
+
+		editMsg,
+		setEditMsg,
+
+		isTyping,
+		setIsTyping,
+
+		imageViewer,
+		setImageViewer,
+	} = userChatContext()
+
+	const onEmojiClick = (emojiData) => {
+		let text = inputText
+		setInputText((text += emojiData.emoji))
+	}
+
+	const onFileChange = (e) => {
+		const file = e.target.files[0]
+		setAttachment(file)
+
+		if (file) {
+			const blobUrl = URL.createObjectURL(file)
+			setAttachmentPreview(blobUrl)
+		}
+	}
 
 	return (
-		<div className="flex items-center p-2 rounded-xl bg-c1/[0.8] relative">
+		<div className="flex items-center p-2 rounded-xl bg-c1/[0.5] relative">
+			{attachmentPreview && (
+				<div className="absolute w-[200px] h-[200px] bottom-16 bg-c1 left-0 p-2 rounded-xl shadow-xl">
+					<img src={attachmentPreview} />
+					<div
+						className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center absolute -right-2 -top-2 hover:cursor-pointer"
+						onClick={() => {
+							setAttachment(null)
+							setAttachmentPreview(null)
+						}}
+					>
+						<MdDeleteForever size={14} />
+					</div>
+				</div>
+			)}
+
 			<div className="shrink-0">
 				<input
 					type="file"
 					id="fileUploader"
 					placeholder="Upload Media"
 					className="hidden"
-					onChange={() => {}}
+					onChange={onFileChange}
 				/>
 				<label htmlFor="fileUploader">
 					<Icon
@@ -37,7 +85,7 @@ const ChatFooter = () => {
 					icon={
 						<HiOutlineEmojiHappy
 							size={24}
-							className="text-blue-300"
+							className="text-yellow-300"
 							onClick={() => setshowImojiPicker(true)}
 						/>
 					}

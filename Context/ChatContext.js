@@ -11,6 +11,14 @@ export const ChatContextProvider = ({ children }) => {
     const [chats, setChats] = useState([])
     const [selectedChat, setSelectedChat] = useState(null)
 
+    const [inputText, setInputText] = useState("")
+    const [attachment, setAttachment] = useState(null)
+    const [attachmentPreview, setAttachmentPreview] = useState(null)
+    const [editMsg, setEditMsg] = useState(null)
+    const [isTyping, setIsTyping] = useState(null)
+    const [imageViewer, setImageViewer] = useState(null)
+
+
     const INITAIL_STATE = {
 
         chatId: "",
@@ -42,10 +50,14 @@ export const ChatContextProvider = ({ children }) => {
                 setUsers,
                 data: state,
                 dispatch,
-                chats,
-                setChats,
-                selectedChat,
-                setSelectedChat
+                chats, setChats,
+                selectedChat, setSelectedChat,
+                inputText, setInputText,
+                attachment, setAttachment,
+                attachmentPreview, setAttachmentPreview,
+                editMsg, setEditMsg,
+                isTyping, setIsTyping,
+                imageViewer, setImageViewer
             }}>
 
             {children}

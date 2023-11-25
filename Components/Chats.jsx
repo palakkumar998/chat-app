@@ -106,7 +106,6 @@ const Chats = () => {
 			</div>
 
 			<ul className="flex flex-col w-full my-5 gap-[5px]">
-
 				{Object.keys(users || {}).length > 0 &&
 					filteredChats?.map((chat) => {
 						const user = users[chat[1].userInfo.uid]

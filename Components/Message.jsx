@@ -1,16 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import { useAuth } from '@/Context/authContext'
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from './Avatar'
 import { userChatContext } from '@/Context/ChatContext'
 import ImageViewer from 'react-simple-image-viewer'
 import { Timestamp } from 'firebase/firestore'
 import { formatDate, wrapEmojisInHtmlTag } from '@/utils/helper'
+import Icon from './Icon'
+import { GoChevronDown } from 'react-icons/go'
+import MessageMenu from './MessageMenu'
 
 const Message = ({ message }) => {
 	const { currentUser } = useAuth()
 	const { users, data, imageViewer, setImageViewer } = userChatContext()
 	const self = message.sender === currentUser.uid
+	const [showMenu, setshowMenu] = useState(false)
 
 	//?---->/ Date logic /<----------//
 	const timestamp = new Timestamp(
@@ -73,6 +77,28 @@ const Message = ({ message }) => {
 								)}
 						</>
 					)}
+
+					<div
+						className={`${
+							showMenu ? '' : 'hidden'
+						} group-hover:flex absolute top-2 ${
+							self ? 'left-2 bg-c5' : 'right-2 bg-c1'
+						} `}
+					>
+						<Icon
+							size="medium"
+							className="hover:bg-inherit rounded-none"
+							icon={
+								<GoChevronDown size={20} className="text-c3" />
+							}
+							onClick={()=> setshowMenu(true)}
+						/>
+						{showMenu && <MessageMenu
+							self={self}
+							setshowMenu={setshowMenu}
+							showMenu={showMenu}
+						/>}
+					</div>
 				</div>
 			</div>
 			<div

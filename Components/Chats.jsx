@@ -99,9 +99,9 @@ const Chats = () => {
 				<input
 					type="text"
 					value={search}
-					placeholder="Search Username..."
+					placeholder="Search or start new chat"
 					onChange={(e) => setSearch(e.target.value)}
-					className="w-[300px] h-12 justify-center rounded-xl bg-c1/[0.5] pl-11 pr-5 placeholder:text-c3 outline-none text-base"
+					className="w-[300px] h-12 justify-center rounded-xl bg-c1/[0.5] pl-11 pr-5 placeholder:text-c3 outline-none text-sm"
 				/>
 			</div>
 

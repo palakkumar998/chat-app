@@ -5,7 +5,7 @@ import Avatar from './Avatar'
 import { userChatContext } from '@/Context/ChatContext'
 import ImageViewer from 'react-simple-image-viewer'
 import { Timestamp } from 'firebase/firestore'
-import { formatDate } from '@/utils/helper'
+import { formatDate, wrapEmojisInHtmlTag } from '@/utils/helper'
 
 const Message = ({ message }) => {
 	const { currentUser } = useAuth()
@@ -38,7 +38,12 @@ const Message = ({ message }) => {
 					} `}
 				>
 					{message.text && (
-						<div className="text-sm">{message.text}</div>
+						<div
+							className="text-sm"
+							dangerouslySetInnerHTML={{
+								__html: wrapEmojisInHtmlTag(message.text),
+							}}
+						></div>
 					)}
 
 					{message.img && (

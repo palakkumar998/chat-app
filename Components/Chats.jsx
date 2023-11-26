@@ -109,6 +109,8 @@ const Chats = () => {
 				{Object.keys(users || {}).length > 0 &&
 					filteredChats?.map((chat) => {
 						const user = users[chat[1].userInfo.uid]
+
+						//?---->/ Date logic /<----------//
 						const timestamp = new Timestamp(
 							chat[1].date?.seconds,
 							chat[1].date?.nanoseconds

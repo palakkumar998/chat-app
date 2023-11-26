@@ -85,7 +85,7 @@ const ChatFooter = () => {
 					icon={
 						<HiOutlineEmojiHappy
 							size={24}
-							className="text-yellow-300"
+							className="text-c3"
 							onClick={() => setshowImojiPicker(true)}
 						/>
 					}

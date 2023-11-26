@@ -2,6 +2,7 @@ import { userChatContext } from '@/Context/ChatContext'
 import { db } from '@/Firebase/firebase'
 import { doc, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
+import Message from './Message'
 
 const Messages = () => {
 	const { data } = userChatContext()
@@ -21,7 +22,9 @@ const Messages = () => {
 			ref={ref}
 			className="grow flex flex-col overflow-auto py-5 scrollbar"
 		>
-			Messages
+			{messages?.map((m) => {
+				return <Message message={m} key={m.id} />
+			})}
 		</div>
 	)
 }

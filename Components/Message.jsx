@@ -9,23 +9,40 @@ import { formatDate, wrapEmojisInHtmlTag } from '@/utils/helper'
 import Icon from './Icon'
 import { GoChevronDown } from 'react-icons/go'
 import MessageMenu from './MessageMenu'
+import DeleteMsgPopup from './popups/DeleteMsgPopup'
 
 const Message = ({ message }) => {
 	const { currentUser } = useAuth()
 	const { users, data, imageViewer, setImageViewer } = userChatContext()
 	const self = message.sender === currentUser.uid
 	const [showMenu, setshowMenu] = useState(false)
+	const [showDeletePopup, setshowDeletePopup] = useState(false)
 
-	//?---->/ Date logic /<----------//
+	//?---->/ DATE CONVERSION LOGIC /<----------//
 	const timestamp = new Timestamp(
 		message.date?.seconds,
 		message.date?.nanoseconds
 	)
 	const date = timestamp.toDate()
-	// console.log(date)
+
+	const deletePopupHandler = () => {
+		setshowDeletePopup(true)
+		setshowMenu(false)
+	}
+	const deleteMessage = (action) => {}
 
 	return (
 		<div className={`mb-5 max-w-[75%] ${self ? 'self-end' : ''}`}>
+			{showDeletePopup && (
+				<DeleteMsgPopup
+					onHide={() => setshowDeletePopup(false)}
+					className="DeleteMsgPopup"
+					noHeader={true}
+					shortHeight={true}
+					self={self}
+					deleteMessage = {deleteMessage}
+				/>
+			)}
 			<div
 				className={`flex items-end gap-3 mb-1 ${
 					self ? 'justify-start flex-row-reverse' : ''
@@ -91,13 +108,16 @@ const Message = ({ message }) => {
 							icon={
 								<GoChevronDown size={20} className="text-c3" />
 							}
-							onClick={()=> setshowMenu(true)}
+							onClick={() => setshowMenu(true)}
 						/>
-						{showMenu && <MessageMenu
-							self={self}
-							setshowMenu={setshowMenu}
-							showMenu={showMenu}
-						/>}
+						{showMenu && (
+							<MessageMenu
+								self={self}
+								setshowMenu={setshowMenu}
+								showMenu={showMenu}
+								deletePopupHandler={deletePopupHandler}
+							/>
+						)}
 					</div>
 				</div>
 			</div>

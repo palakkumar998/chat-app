@@ -7,7 +7,7 @@ import { RiShareForwardLine } from 'react-icons/ri'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { MdDeleteOutline } from 'react-icons/md'
 
-const MessageMenu = ({ showMenu, setshowMenu, self }) => {
+const MessageMenu = ({ showMenu, setshowMenu, self, deletePopupHandler }) => {
 	const handleClickAway = () => {
 		setshowMenu(false)
 	}
@@ -61,7 +61,13 @@ const MessageMenu = ({ showMenu, setshowMenu, self }) => {
 							</div>
 						</li>
 					)}
-					<li className="flex py-3 px-5 items-center hover:bg-black cursor-pointer">
+					<li
+						className="flex py-3 px-5 items-center hover:bg-black cursor-pointer"
+						onClick={(e) => {
+							e.stopPropagation()
+							deletePopupHandler(true)
+						}}
+					>
 						Delete
 						<div className="absolute items-center right-3">
 							<MdDeleteOutline />

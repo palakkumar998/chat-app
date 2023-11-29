@@ -4,12 +4,14 @@ import React, { useState } from 'react'
 import Avatar from './Avatar'
 import { userChatContext } from '@/Context/ChatContext'
 import ImageViewer from 'react-simple-image-viewer'
-import { Timestamp } from 'firebase/firestore'
+import { Timestamp, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { formatDate, wrapEmojisInHtmlTag } from '@/utils/helper'
 import Icon from './Icon'
 import { GoChevronDown } from 'react-icons/go'
 import MessageMenu from './MessageMenu'
 import DeleteMsgPopup from './popups/DeleteMsgPopup'
+import { db } from '@/Firebase/firebase'
+import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from '@/utils/constants'
 
 const Message = ({ message }) => {
 	const { currentUser } = useAuth()
@@ -29,7 +31,35 @@ const Message = ({ message }) => {
 		setshowDeletePopup(true)
 		setshowMenu(false)
 	}
-	const deleteMessage = (action) => {}
+	const deleteMessage = async (action) => {
+		try {
+			const messageId = message.id
+			const chatRef = doc(db, 'chats', data.chatId)
+
+			const chatDoc = await getDoc(chatRef)
+
+			const updatedMessages = chatDoc.data().messages.map((message) => {
+				if (message.id === messageId) {
+					if (action === DELETED_FOR_ME) {
+						message.deletedInfo = {
+							[currentUser.uid]: DELETED_FOR_ME,
+						}
+					}
+					if (action === DELETED_FOR_EVERYONE) {
+						message.deletedInfo = {
+							deletedForEveryone: true,
+						}
+					}
+				}
+				return message
+			})
+
+			await updateDoc(chatRef, { messages: updatedMessages })
+			setshowDeletePopup(false)
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	return (
 		<div className={`mb-5 max-w-[75%] ${self ? 'self-end' : ''}`}>
@@ -40,7 +70,7 @@ const Message = ({ message }) => {
 					noHeader={true}
 					shortHeight={true}
 					self={self}
-					deleteMessage = {deleteMessage}
+					deleteMessage={deleteMessage}
 				/>
 			)}
 			<div

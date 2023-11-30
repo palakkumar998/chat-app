@@ -16,9 +16,17 @@ const Messages = () => {
 			if (doc.exists()) {
 				setMessages(doc.data().messages)
 			}
+			setTimeout(() => {
+				scrollToBottom();
+			}, 0)
 		})
 		return () => unsub()
 	}, [data.chatId])
+
+	const scrollToBottom = () => {
+		const chatContainer = ref.current
+		chatContainer.scrollTop = chatContainer.scrollHeight
+	}
 
 	return (
 		<div
@@ -32,7 +40,8 @@ const Messages = () => {
 						!m?.deletedInfo?.deletedForEveryone &&
 						!m?.deletedInfo?.[currentUser.uid]
 					)
-				})?.map((m) => {
+				})
+				?.map((m) => {
 					return <Message message={m} key={m.id} />
 				})}
 		</div>

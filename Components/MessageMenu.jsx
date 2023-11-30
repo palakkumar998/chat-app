@@ -7,7 +7,13 @@ import { RiShareForwardLine } from 'react-icons/ri'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { MdDeleteOutline } from 'react-icons/md'
 
-const MessageMenu = ({ showMenu, setshowMenu, self, deletePopupHandler }) => {
+const MessageMenu = ({
+	showMenu,
+	setshowMenu,
+	self,
+	deletePopupHandler,
+	setEditMsg,
+}) => {
 	const handleClickAway = () => {
 		setshowMenu(false)
 	}
@@ -28,7 +34,14 @@ const MessageMenu = ({ showMenu, setshowMenu, self, deletePopupHandler }) => {
 			>
 				<ul className="flex flex-col py-2 text-sm">
 					{self && (
-						<li className="flex py-3 px-5 items-center hover:bg-black cursor-pointer">
+						<li
+							className="flex py-3 px-5 items-center hover:bg-black cursor-pointer"
+							onClick={(e) => {
+								e.stopPropagation()
+								setshowMenu(false)
+								setEditMsg()
+							}}
+						>
 							Edit
 							<div className="absolute items-center right-3">
 								<MdOutlineModeEdit />

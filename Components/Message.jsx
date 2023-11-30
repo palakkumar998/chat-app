@@ -15,7 +15,7 @@ import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from '@/utils/constants'
 
 const Message = ({ message }) => {
 	const { currentUser } = useAuth()
-	const { users, data, imageViewer, setImageViewer } = userChatContext()
+	const { users, data, imageViewer, setImageViewer,editMsg, setEditMsg } = userChatContext()
 	const self = message.sender === currentUser.uid
 	const [showMenu, setshowMenu] = useState(false)
 	const [showDeletePopup, setshowDeletePopup] = useState(false)
@@ -146,16 +146,14 @@ const Message = ({ message }) => {
 								setshowMenu={setshowMenu}
 								showMenu={showMenu}
 								deletePopupHandler={deletePopupHandler}
+								setEditMsg = {()=> setEditMsg(message)}
 							/>
 						)}
 					</div>
 				</div>
 			</div>
 			<div
-				className={`flex items-end ${
-					self ? 'justify-start flex-row-reverse mr-12' : 'ml-12'
-				}`}
-			>
+				className={`flex items-end ${self ? 'justify-start flex-row-reverse mr-12' : 'ml-12'}`}>
 				<div className="text-xs text-c3">{formatDate(date)}</div>
 			</div>
 		</div>

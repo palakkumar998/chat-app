@@ -6,11 +6,12 @@ import {
 	Timestamp,
 	arrayUnion,
 	doc,
+	getDoc,
 	serverTimestamp,
 	updateDoc,
 } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TbSend } from 'react-icons/tb'
 import { v4 as uuid } from 'uuid'
 
@@ -23,6 +24,8 @@ const Composebar = () => {
 		setAttachment,
 		attachmentPreview,
 		setAttachmentPreview,
+		editMsg,
+		setEditMsg,
 	} = userChatContext()
 	const { currentUser } = useAuth()
 	const handleTyping = (e) => {
@@ -31,7 +34,7 @@ const Composebar = () => {
 
 	const onKeyUp = (e) => {
 		if (e.key === 'Enter' && (inputText || attachment)) {
-			handleSend()
+			editMsg ? handleEdit() : handleSend()
 		}
 	}
 
@@ -105,6 +108,73 @@ const Composebar = () => {
 		setAttachmentPreview(null)
 	}
 
+	const handleEdit = async () => {
+		const messageId = editMsg.id
+		const chatRef = doc(db, 'chats', data.chatId)
+
+		const chatDoc = await getDoc(chatRef)
+		if (attachment) {
+			const storageRef = ref(storage, uuid())
+			const uploadTask = uploadBytesResumable(storageRef, attachment)
+
+			uploadTask.on(
+				'state_changed',
+				(snapshot) => {
+					const progress =
+						(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+					console.log('Upload is ' + progress + '% done')
+					switch (snapshot.state) {
+						case 'paused':
+							console.log('Upload is paused')
+							break
+						case 'running':
+							console.log('Upload is running')
+							break
+					}
+				},
+				(error) => {
+					console.error(error)
+				},
+				() => {
+					getDownloadURL(uploadTask.snapshot.ref).then(
+						async (downloadURL) => {
+							let updatedMessages = chatDoc
+								.data()
+								.messages?.map((message) => {
+									if (message.id === messageId) {
+										message.text = inputText
+										message.img = downloadURL
+									}
+									return message
+								})
+							await updateDoc(chatRef, {
+								messages: updatedMessages,
+							})
+						}
+					)
+				}
+			)
+		} else {
+			let updatedMessages = chatDoc.data().messages.map((message) => {
+				if (message.id === messageId) {
+					message.text = inputText
+				}
+				return message
+			})
+			await updateDoc(chatRef, {
+				messages: updatedMessages,
+			})
+		}
+
+		setInputText('')
+		setAttachment(null)
+		setAttachmentPreview(null)
+		setEditMsg(null)
+	}
+	useEffect(() => {
+		setInputText(editMsg?.text || '')
+	}, [editMsg])
+
 	return (
 		<div className="flex items-center gap-2 grow">
 			<input
@@ -119,7 +189,7 @@ const Composebar = () => {
 				className={`h-10 w-10 rounded-full shrink-0 flex justify-center items-center ${
 					inputText.trim().length > 0 ? 'bg-green-500' : ''
 				} `}
-				onClick={handleSend}
+				onClick={editMsg ? handleEdit : handleSend}
 			>
 				<TbSend className="text-white" size={20} />
 			</button>

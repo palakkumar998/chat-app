@@ -1,4 +1,4 @@
-import { userChatContext } from '@/Context/ChatContext'
+import { userChatContext, setIsTyping } from '@/Context/ChatContext'
 import { db } from '@/Firebase/firebase'
 import { doc, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
@@ -7,17 +7,19 @@ import { DELETED_FOR_ME } from '@/utils/constants'
 import { useAuth } from '@/Context/authContext'
 
 const Messages = () => {
-	const { data } = userChatContext()
+	const { data, setIsTyping } = userChatContext()
 	const [messages, setMessages] = useState([])
 	const ref = useRef()
 	const { currentUser } = useAuth()
+
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
 			if (doc.exists()) {
-				setMessages(doc.data().messages)
+				setMessages(doc.data().messages);
+				setIsTyping(doc.data()?.typing?.[data.user.uid] || false);
 			}
 			setTimeout(() => {
-				scrollToBottom();
+				scrollToBottom()
 			}, 0)
 		})
 		return () => unsub()

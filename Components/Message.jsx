@@ -15,7 +15,8 @@ import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from '@/utils/constants'
 
 const Message = ({ message }) => {
 	const { currentUser } = useAuth()
-	const { users, data, imageViewer, setImageViewer,editMsg, setEditMsg } = userChatContext()
+	const { users, data, imageViewer, setImageViewer, editMsg, setEditMsg } =
+		userChatContext()
 	const self = message.sender === currentUser.uid
 	const [showMenu, setshowMenu] = useState(false)
 	const [showDeletePopup, setshowDeletePopup] = useState(false)
@@ -84,7 +85,7 @@ const Message = ({ message }) => {
 					className="mb-4"
 				/>
 				<div
-					className={`group flex flex-col gap-4 p-3 rounded-3xl relative break-all ${
+					className={`group flex  gap-4 p-3 rounded-3xl relative break-all ${
 						self ? 'rounded-br-sm bg-c5 ' : 'rounded-bl-sm bg-c1'
 					} `}
 				>
@@ -127,14 +128,14 @@ const Message = ({ message }) => {
 
 					<div
 						className={`${
-							showMenu ? '' : 'hidden'
-						} group-hover:flex absolute top-2 ${
-							self ? 'left-2 bg-c5' : 'right-2 bg-c1'
+							showMenu ? '' : ''
+						} rounded-full group-hover:flex absolute top-2 ${
+							self ? '-left-9 bg-c5' : '-right-9 bg-c1'
 						} `}
 					>
 						<Icon
-							size="medium"
-							className="hover:bg-inherit rounded-none"
+							size="small"
+							className="hover:bg-inherit rounded-full"
 							icon={
 								<GoChevronDown size={20} className="text-c3" />
 							}
@@ -146,16 +147,28 @@ const Message = ({ message }) => {
 								setshowMenu={setshowMenu}
 								showMenu={showMenu}
 								deletePopupHandler={deletePopupHandler}
-								setEditMsg = {()=> setEditMsg(message)}
+								setEditMsg={() => setEditMsg(message)}
 							/>
 						)}
 					</div>
+					<div
+						className={`flex items-end ${
+							self
+								? 'justify-start flex-row-reverse -mr-1'
+								: 'ml-1'
+						}`}
+					>
+						<div className="text-xs text-c3">
+							{formatDate(date)}
+						</div>
+					</div>
 				</div>
 			</div>
-			<div
+
+			{/* <div
 				className={`flex items-end ${self ? 'justify-start flex-row-reverse mr-12' : 'ml-12'}`}>
 				<div className="text-xs text-c3">{formatDate(date)}</div>
-			</div>
+			</div> */}
 		</div>
 	)
 }

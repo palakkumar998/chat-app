@@ -85,13 +85,13 @@ const Message = ({ message }) => {
 					className="mb-4"
 				/>
 				<div
-					className={`group flex  gap-4 p-3 rounded-3xl relative break-all ${
+					className={`group flex  gap-4 p-3 rounded-xl relative break-all ${
 						self ? 'rounded-br-sm bg-c5 ' : 'rounded-bl-sm bg-c1'
 					} `}
 				>
 					{message.text && (
 						<div
-							className="text-sm"
+							className="text-xs"
 							dangerouslySetInnerHTML={{
 								__html: wrapEmojisInHtmlTag(message.text),
 							}}
@@ -158,7 +158,7 @@ const Message = ({ message }) => {
 								: 'ml-1'
 						}`}
 					>
-						<div className="text-xs text-c3">
+						<div className="text-[9px] text-c3">
 							{formatDate(date)}
 						</div>
 					</div>

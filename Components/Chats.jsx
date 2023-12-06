@@ -1,11 +1,21 @@
 import { userChatContext } from '@/Context/ChatContext'
 import { db } from '@/Firebase/firebase'
-import { Timestamp, collection, doc, onSnapshot } from 'firebase/firestore'
+import {
+	Timestamp,
+	collection,
+	doc,
+	getDoc,
+	onSnapshot,
+	query,
+	updateDoc,
+	where,
+} from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line } from 'react-icons/ri'
 import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
 import { formatDate } from '@/utils/helper'
+import { data } from 'autoprefixer'
 
 const Chats = () => {
 	const {
@@ -16,12 +26,14 @@ const Chats = () => {
 		selectedChat,
 		setSelectedChat,
 		dispatch,
+		data,
 	} = userChatContext()
 	const [search, setSearch] = useState('')
 	const { currentUser } = useAuth()
 
 	const isBlockExecutedRef = useRef(false)
 	const isUserFetchedRef = useRef(false)
+	const [unreadMsgs, setUnreadMsgs] = useState({})
 
 	//?-------->/ FETCHING USER'S DATA /<----------//
 	useEffect(() => {
@@ -37,6 +49,38 @@ const Chats = () => {
 			}
 		})
 	}, [])
+
+	useEffect(() => {
+		const documentIds = Object.keys(chats)
+		if (documentIds.length === 0) {
+			return
+		}
+		const q = query(
+			collection(db, 'chats'),
+			where('__name__', 'in', documentIds)
+		)
+		const unsub = onSnapshot(q, (snapshot) => {
+			let msgs = {}
+			snapshot.forEach((doc) => {
+				if (doc.id !== data.chatId) {
+					msgs[doc.id] = doc
+						.data()
+						.messages.filter(
+							(m) =>
+								m?.read === false &&
+								m?.sender !== currentUser.uid
+						)
+				}
+				Object.keys(msgs || {}).map((c) => {
+					if (msgs[c].length < 1) {
+						delete msgs[c]
+					}
+				})
+			})
+			setUnreadMsgs(msgs)
+		})
+		return () => unsub()
+	}, [chats, selectedChat])
 
 	//?-------->/ FETCHING USER'S CHATS /<------------//
 	useEffect(() => {
@@ -87,11 +131,29 @@ const Chats = () => {
 		.sort((a, b) => b[1].date - a[1].date)
 
 	console.log(filteredChats)
+	//?------->/ THIS LOGIC CHECK READ IS FALSE IN THE DB AND MAKE IT TRUE/<---------//
+	const readChat = async (chatId) => {
+		const chatRef = doc(db, 'chats', chatId)
+		const chatDoc = await getDoc(chatRef)
+		let updatedMessages = chatDoc.data().messages.map((m) => {
+			if (m?.read === false) {
+				m.read = true
+			}
+			return m
+		})
+		await updateDoc(chatRef, {
+			messages: updatedMessages,
+		})
+	}
 
 	const handleSelect = (user, selectedChatId) => {
 		setSelectedChat(user)
 		dispatch({ type: 'CHANGE_USER', payload: user })
+		if (unreadMsgs?.[selectedChatId]?.length > 0) {
+			readChat(selectedChatId)
+		}
 	}
+
 	return (
 		<div className="flex flex-col h-full">
 			<div className="shrink-0 sticky -top-[20px] z-10 justify-center flex w-full bg-c2 py-5">
@@ -116,7 +178,6 @@ const Chats = () => {
 							chat[1].date?.nanoseconds
 						)
 						const date = timestamp.toDate()
-						// console.log(date)
 
 						return (
 							<>
@@ -146,9 +207,12 @@ const Chats = () => {
 												'Say hello... to   ' +
 													user.displayName}
 										</p>
-										<span className="absolute right-0 top-7 min-w-[20px] h-5 rounded-full bg-blue-500  flex justify-center items-center text-sm">
-											8
-										</span>
+
+										{!!unreadMsgs?.[chat[0]]?.length && (
+											<span className="absolute right-0 top-7 min-w-[20px] h-5 rounded-full bg-blue-500  flex justify-center items-center text-sm">
+												{unreadMsgs?.[chat[0]]?.length}
+											</span>
+										)}
 									</div>
 								</li>
 							</>

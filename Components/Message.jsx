@@ -91,7 +91,9 @@ const Message = ({ message }) => {
 				>
 					{message.text && (
 						<div
-							className="text-xs"
+							className={`text-[13px] ${
+								self ? 'pr-12' : 'pl-12'
+							}`}
 							dangerouslySetInnerHTML={{
 								__html: wrapEmojisInHtmlTag(message.text),
 							}}
@@ -130,14 +132,18 @@ const Message = ({ message }) => {
 						className={`${
 							showMenu ? '' : ''
 						} rounded-full group-hover:flex absolute top-2 ${
-							self ? '-left-9 bg-c5' : '-right-9 bg-c1'
+							self ? '-left-9' : '-right-9 '
 						} `}
 					>
 						<Icon
 							size="small"
-							className="hover:bg-inherit rounded-full"
+							className={`hover:bg-inherit ${
+								self
+									? 'hover:rotate-90'
+									: 'hover:rotate-[270deg]'
+							} rounded-full`}
 							icon={
-								<GoChevronDown size={20} className="text-c3" />
+								<GoChevronDown size={15} className="text-c3" />
 							}
 							onClick={() => setshowMenu(true)}
 						/>
@@ -151,7 +157,7 @@ const Message = ({ message }) => {
 							/>
 						)}
 					</div>
-					<div
+					{/* <div
 						className={`flex items-end ${
 							self
 								? 'justify-start flex-row-reverse -mr-1'
@@ -161,14 +167,17 @@ const Message = ({ message }) => {
 						<div className="text-[9px] text-c3">
 							{formatDate(date)}
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</div>
 
-			{/* <div
-				className={`flex items-end ${self ? 'justify-start flex-row-reverse mr-12' : 'ml-12'}`}>
-				<div className="text-xs text-c3">{formatDate(date)}</div>
-			</div> */}
+			<div
+				className={`flex relative bottom-5 items-end ${
+					self ? 'justify-start flex-row-reverse mr-12' : 'ml-12'
+				}`}
+			>
+				<div className="text-[10px] text-c3">{formatDate(date)}</div>
+			</div>
 		</div>
 	)
 }

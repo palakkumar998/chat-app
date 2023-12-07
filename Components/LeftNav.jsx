@@ -28,7 +28,7 @@ const LeftNav = () => {
 	const [userPopups, setuserPopups] = useState(false)
 
 	//?------------------>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC /<----------------------//
-	const updloadImageToFirstore = (file) => {
+	const uploadImageToFirebase = async (file) => {
 		try {
 			if (file) {
 				const storageRef = ref(storage, currentUser.displayName)
@@ -37,17 +37,23 @@ const LeftNav = () => {
 				uploadTask.on(
 					'state_changed',
 					(snapshot) => {
-						const progress =
-							(snapshot.bytesTransferred / snapshot.totalBytes) *
-							100
-						console.log('Upload is ' + progress + '% done')
-						switch (snapshot.state) {
-							case 'paused':
-								console.log('Upload is paused')
-								break
-							case 'running':
-								console.log('Upload is running')
-								break
+						{
+							/*//?---------------> / IMAGE UPLAODING PROGRESS LOGIC /<---------------------*/
+						}
+						// const progress =
+						// 	(snapshot.bytesTransferred / snapshot.totalBytes) *
+						// 	100
+						// console.log('Upload is ' + progress + '% done')
+						// switch (snapshot.state) {
+						// 	case 'paused':
+						// 		console.log('Upload is paused')
+						// 		break
+						// 	case 'running':
+						// 		console.log('Upload is running')
+						// 		break
+						// }
+						{
+							/*//*---------------> / IMAGE UPLAODING PROGRESS LOGIC, ENDS HERE/<---------------------*/
 						}
 					},
 					(error) => {
@@ -56,7 +62,7 @@ const LeftNav = () => {
 					() => {
 						getDownloadURL(uploadTask.snapshot.ref).then(
 							async (downloadURL) => {
-								console.log('File available at', downloadURL)
+								// console.log('File available at', downloadURL)
 								handleUpdateProfile('photo', downloadURL)
 
 								await updateProfile(authUser, {
@@ -111,13 +117,13 @@ const LeftNav = () => {
 						await updateProfile(authUser, {
 							displayName: value,
 						})
+						setNameEdited(false)
 					}
 					if (type === 'color') {
 						await updateProfile(authUser, {
 							color: value,
 						})
 					}
-					setNameEdited(false)
 				},
 				{
 					pending: 'Profile Updating..',
@@ -171,6 +177,7 @@ const LeftNav = () => {
 					/>
 					<div className="w-full h-full rounded-full top-0 left-0 justify-center items-center bg-black/0.5 absolute hidden group-hover:flex">
 						<label htmlFor="fileUpload">
+							{/*//?---------------> / ADDING IMAGE TO PROFILE ICON CONDITIONALLY /<---------------------*/}
 							{currentUser.photoURL ? (
 								<MdPhotoCamera size={34} />
 							) : (
@@ -182,12 +189,13 @@ const LeftNav = () => {
 							id="fileUpload"
 							type="file"
 							onChange={(e) =>
-								updloadImageToFirstore(e.target.files[0])
+								uploadImageToFirebase(e.target.files[0])
 							}
 							style={{ display: 'none' }}
 						/>
 					</div>
 
+					{/*//?---------------> / PROFILE IMAGE DELETING ICON CONDITIONALLY /<---------------------*/}
 					{currentUser.photoURL && (
 						<div
 							className="w-6 h-6 rounded-full bg-red-500 flex justify-center items-center absolute right-0 bottom-0"
@@ -196,9 +204,17 @@ const LeftNav = () => {
 							<MdDeleteForever size={14} />
 						</div>
 					)}
+					{/*//*---------------> / ENDS HERE/<------------*/}
+
+
 				</div>
+
 				<div className="mt-5 flex flex-col items-center">
 					<div className="flex items-center gap-2">
+
+
+						{/*//?---------------> / USER NAME EDITING ICON SHOWING CONDITIONALLY /<----------------------*/}
+						{!nameEdited && <BiEdit className="text-c3" />}
 						{nameEdited && (
 							<BsFillCheckCircleFill
 								className="cursor-pointer text-c4"
@@ -212,6 +228,8 @@ const LeftNav = () => {
 								}
 							/>
 						)}
+						{/*//*---------------> / ENDS HERE /<---------------------*/}
+
 						<div
 							contentEditable
 							className="bg-transparent outline-none border-none text-center"
@@ -224,8 +242,12 @@ const LeftNav = () => {
 					</div>
 					<span className="text-c3 text-sm">{currentUser.email}</span>
 				</div>
-				{/* profile color selector */}
+
+
+			
 				<div className="grid grid-cols-5 gap-4 mt-5">
+
+					{/*//?---------------> / MAPPING COLORS TO PROFILE USING MAP FUNCTION /<---------------------*/}
 					{profileColors.map((color, index) => (
 						<span
 							className="w-10 h-10 flex rounded-full items-center justify-center cursor-pointer transition-transform hover:scale-125  "
@@ -240,6 +262,8 @@ const LeftNav = () => {
 							)}
 						</span>
 					))}
+					{/*//*---------------> / ENDS HERE /<---------------------*/}
+					
 				</div>
 			</div>
 		)
@@ -258,16 +282,19 @@ const LeftNav = () => {
 			{editProfile ? (
 				editProfileContainer()
 			) : (
-				<div
-					className="relative group cursor-pointer"
-					onClick={() => seteditProfile(true)}
-				>
-					<Avatar size="large" user={currentUser} />
-
-					<div className="w-full h-full rounded-full bg-black/[0.5] absolute top-0 left-0 justify-center items-center hidden group-hover:flex">
-						<BiEdit size={14} />
-					</div>
-				</div>
+				<>
+					{currentUser && (
+						<div
+							className="relative group cursor-pointer"
+							onClick={() => seteditProfile(true)}
+						>
+							<Avatar size="large" user={currentUser} />
+							<div className="w-full h-full rounded-full bg-black/[0.5] absolute top-0 left-0 justify-center items-center hidden group-hover:flex">
+								<BiEdit size={14} />
+							</div>
+						</div>
+					)}
+				</>
 			)}
 
 			<div

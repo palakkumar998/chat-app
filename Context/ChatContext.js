@@ -6,11 +6,10 @@ const chatContext = createContext();
 
 
 export const ChatContextProvider = ({ children }) => {
-    const [users, setUsers] = useState(false);
     const { currentUser } = useAuth();
+    const [users, setUsers] = useState(false);
     const [chats, setChats] = useState([])
     const [selectedChat, setSelectedChat] = useState(null)
-
     const [inputText, setInputText] = useState("")
     const [attachment, setAttachment] = useState(null)
     const [attachmentPreview, setAttachmentPreview] = useState(null)
@@ -18,12 +17,22 @@ export const ChatContextProvider = ({ children }) => {
     const [isTyping, setIsTyping] = useState(null)
     const [imageViewer, setImageViewer] = useState(null)
 
+    const resetFooterStates = () => {
+        setInputText("")
+        setAttachment(null)
+        setAttachmentPreview(null)
+        setEditMsg(null)
+        setImageViewer(null)
+ 
+    }
+
 
     const INITAIL_STATE = {
 
         chatId: "",
         user: null
     }
+
 
     const chatReducer = (state, action) => {
         switch (action.type) {
@@ -57,7 +66,8 @@ export const ChatContextProvider = ({ children }) => {
                 attachmentPreview, setAttachmentPreview,
                 editMsg, setEditMsg,
                 isTyping, setIsTyping,
-                imageViewer, setImageViewer
+                imageViewer, setImageViewer,
+                resetFooterStates
             }}>
 
             {children}

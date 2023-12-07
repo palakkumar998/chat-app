@@ -27,6 +27,7 @@ const Chats = () => {
 		setSelectedChat,
 		dispatch,
 		data,
+		resetFooterStates,
 	} = userChatContext()
 	const [search, setSearch] = useState('')
 	const { currentUser } = useAuth()
@@ -154,6 +155,10 @@ const Chats = () => {
 		}
 	}
 
+	useEffect(() => {
+		resetFooterStates()
+	}, [data?.chatId])
+
 	return (
 		<div className="flex flex-col h-full">
 			<div className="shrink-0 sticky -top-[20px] z-10 justify-center flex w-full bg-c2 py-5">
@@ -209,7 +214,7 @@ const Chats = () => {
 										</p>
 
 										{!!unreadMsgs?.[chat[0]]?.length && (
-											<span className="absolute right-0 top-7 min-w-[20px] h-5 rounded-full bg-blue-500  flex justify-center items-center text-sm">
+											<span className="absolute right-0 top-7 min-w-[20px] h-5 rounded-full bg-green-500  flex justify-center items-center text-sm">
 												{unreadMsgs?.[chat[0]]?.length}
 											</span>
 										)}

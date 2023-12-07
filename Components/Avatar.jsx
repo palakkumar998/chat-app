@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 
+
 const Avatar = ({ size, user, onClick }) => {
 	//?---------------->?/ CUSTOM SIZE CLASSES /<-----------------//
 	const s =
@@ -51,7 +52,7 @@ const Avatar = ({ size, user, onClick }) => {
 			)}
 
 			{/* //?----------->/ USER PROFILE PICTURE AND FIRST NAME LETTER LOGIC /<-----------------*/}
-			{user?.photoURl ? (
+			{user.photoURl ? (
 				<div className={`${c} overflow-hidden rounded-full`}>
 					<Image
 						width={s}

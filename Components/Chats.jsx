@@ -15,7 +15,6 @@ import { RiSearch2Line } from 'react-icons/ri'
 import Avatar from './Avatar'
 import { useAuth } from '@/Context/authContext'
 import { formatDate } from '@/utils/helper'
-import { data } from 'autoprefixer'
 
 const Chats = () => {
 	const {

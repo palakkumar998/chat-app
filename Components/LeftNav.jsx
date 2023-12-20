@@ -22,62 +22,11 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 const LeftNav = () => {
 	const [editProfile, seteditProfile] = useState(false)
-	const { currentUser, signOut, setCurrentUser } = useAuth()
 	const [nameEdited, setNameEdited] = useState(false)
-	const authUser = auth.currentUser
 	const [userPopups, setuserPopups] = useState(false)
 
-	//?------------------>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC /<----------------------//
-	const uploadImageToFirebase = async (file) => {
-		try {
-			if (file) {
-				const storageRef = ref(storage, currentUser.displayName)
-				const uploadTask = uploadBytesResumable(storageRef, file)
-
-				uploadTask.on(
-					'state_changed',
-					(snapshot) => {
-						{
-							/*//?---------------> / IMAGE UPLAODING PROGRESS LOGIC /<---------------------*/
-						}
-						// const progress =
-						// 	(snapshot.bytesTransferred / snapshot.totalBytes) *
-						// 	100
-						// console.log('Upload is ' + progress + '% done')
-						// switch (snapshot.state) {
-						// 	case 'paused':
-						// 		console.log('Upload is paused')
-						// 		break
-						// 	case 'running':
-						// 		console.log('Upload is running')
-						// 		break
-						// }
-						{
-							/*//*---------------> / IMAGE UPLAODING PROGRESS LOGIC, ENDS HERE/<---------------------*/
-						}
-					},
-					(error) => {
-						console.error(error)
-					},
-					() => {
-						getDownloadURL(uploadTask.snapshot.ref).then(
-							async (downloadURL) => {
-								// console.log('File available at', downloadURL)
-								handleUpdateProfile('photo', downloadURL)
-
-								await updateProfile(authUser, {
-									photoURL: downloadURL,
-								})
-							}
-						)
-					}
-				)
-			}
-		} catch (error) {
-			console.error(error)
-		}
-	}
-	//*============>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC ENDS HERE /<===============//
+	const { currentUser, signOut, setCurrentUser } = useAuth()
+	const authUser = auth.currentUser
 
 	//?------------------->/ PROFILE HANDLING LOGIC / <-------------------//
 	const handleUpdateProfile = (type, value) => {
@@ -140,6 +89,37 @@ const LeftNav = () => {
 		}
 	}
 	//*============>/ PROFILE HANDLING LOGIC ENDS HERE/<=============//
+
+	//?------------------>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC /<----------------------//
+	const uploadImageToFirebase = async (file) => {
+		try {
+			if (file) {
+				const storageRef = ref(storage, currentUser.displayName)
+				const uploadTask = uploadBytesResumable(storageRef, file)
+
+				uploadTask.on(
+					'state_changed',
+					(snapshot) => {},
+					(error) => {
+						console.error(error)
+					},
+					() => {
+						getDownloadURL(uploadTask.snapshot.ref).then(
+							async (downloadURL) => {
+								handleUpdateProfile('photo', downloadURL)
+								await updateProfile(authUser, {
+									photoURL: downloadURL,
+								})
+							}
+						)
+					}
+				)
+			}
+		} catch (error) {
+			console.error(error)
+		}
+	}
+	//*============>/ IMAGE UPLAODING TO FIRESTORE & PROGRESSING LOGIC ENDS HERE /<===============//
 
 	//?-----------> / DISPLAY NAME & PREVENT UNUSAUL EDITING IN USER NAME /<-----------//
 	const onkeyup = (event) => {
@@ -205,14 +185,10 @@ const LeftNav = () => {
 						</div>
 					)}
 					{/*//*---------------> / ENDS HERE/<------------*/}
-
-
 				</div>
 
 				<div className="mt-5 flex flex-col items-center">
 					<div className="flex items-center gap-2">
-
-
 						{/*//?---------------> / USER NAME EDITING ICON SHOWING CONDITIONALLY /<----------------------*/}
 						{!nameEdited && <BiEdit className="text-c3" />}
 						{nameEdited && (
@@ -243,10 +219,7 @@ const LeftNav = () => {
 					<span className="text-c3 text-sm">{currentUser.email}</span>
 				</div>
 
-
-			
 				<div className="grid grid-cols-5 gap-4 mt-5">
-
 					{/*//?---------------> / MAPPING COLORS TO PROFILE USING MAP FUNCTION /<---------------------*/}
 					{profileColors.map((color, index) => (
 						<span
@@ -263,7 +236,6 @@ const LeftNav = () => {
 						</span>
 					))}
 					{/*//*---------------> / ENDS HERE /<---------------------*/}
-					
 				</div>
 			</div>
 		)

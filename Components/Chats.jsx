@@ -1,3 +1,4 @@
+import { useAuth } from '@/Context/authContext'
 import { userChatContext } from '@/Context/ChatContext'
 import { db } from '@/Firebase/firebase'
 import {
@@ -13,7 +14,6 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line } from 'react-icons/ri'
 import Avatar from './Avatar'
-import { useAuth } from '@/Context/authContext'
 import { formatDate } from '@/utils/helper'
 
 const Chats = () => {
@@ -37,17 +37,17 @@ const Chats = () => {
 
 	//?-------->/ FETCHING USER'S DATA /<----------//
 	useEffect(() => {
-		onSnapshot(collection(db, 'users'), (snapshot) => {
+		const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
 			const updatedUsers = {}
 			snapshot.forEach((doc) => {
 				updatedUsers[doc.id] = doc.data()
-				console.log(doc.data())
 			})
 			setUsers(updatedUsers)
 			if (!isBlockExecutedRef.current) {
 				isUserFetchedRef.current = true
 			}
 		})
+		return unsubscribe
 	}, [])
 
 	useEffect(() => {
@@ -72,14 +72,14 @@ const Chats = () => {
 						)
 				}
 				Object.keys(msgs || {}).map((c) => {
-					if (msgs[c].length < 1) {
+					if (msgs[c]?.length < 1) {
 						delete msgs[c]
 					}
 				})
 			})
 			setUnreadMsgs(msgs)
 		})
-		return () => unsub()
+		return unsub
 	}, [chats, selectedChat])
 
 	//?-------->/ FETCHING USER'S CHATS /<------------//
@@ -98,27 +98,44 @@ const Chats = () => {
 							isUserFetchedRef.current &&
 							users
 						) {
-							const firstChat = Object.values(data).sort(
-								(a, b) => b.data - a.date
-							)[0]
+							const firstChat = Object.values(data)
+								.filter(
+									(chat) =>
+										!chat?.hasOwnProperty('chatDeleted')
+								)
+								.sort((a, b) => {
+									return b.date - a.date
+								})[0]
 
 							if (firstChat) {
 								const user = users[firstChat?.userInfo?.uid]
+								
 								handleSelect(user)
+								const chatId =
+									currentUser.uid > user.uid
+										? currentUser.uid + user.uid
+										: user.uid + currentUser.uid
+								readChat(chatId)
 							}
 							isBlockExecutedRef.current = true
 						}
 					}
 				}
 			)
+			return () => unsub();
 		}
 
 		currentUser.uid && getChats()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isBlockExecutedRef.current, users])
 
+	useEffect(() => {
+		resetFooterStates()
+	}, [data?.chatId])
+
 	//?----->/ LOGIC- METHOD TO ARRAY, SEARCHING USER/EMAIL/CHATS IN SEARCH-BAR & SORTING CHATS WITH CURRENT TIMESTAMP /<-------//
 	const filteredChats = Object.entries(chats || {})
+		.filter(([, chat]) => !chat?.hasOwnProperty('chatDeleted'))
 		.filter(
 			([, chat]) =>
 				chat?.userInfo?.displayName
@@ -154,10 +171,6 @@ const Chats = () => {
 		}
 	}
 
-	useEffect(() => {
-		resetFooterStates()
-	}, [data?.chatId])
-
 	return (
 		<div className="flex flex-col h-full">
 			<div className="shrink-0 sticky -top-[20px] z-10 justify-center flex w-full bg-c2 py-5">
@@ -174,7 +187,7 @@ const Chats = () => {
 			<ul className="flex flex-col w-full my-5 gap-[5px]">
 				{Object.keys(users || {}).length > 0 &&
 					filteredChats?.map((chat) => {
-						const user = users[chat[1].userInfo.uid]
+						const user = users[chat[1]?.userInfo?.uid]
 
 						//?---->/ Date logic /<----------//
 						const timestamp = new Timestamp(

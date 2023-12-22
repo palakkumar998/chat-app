@@ -5,6 +5,7 @@ import { db, storage } from '@/Firebase/firebase'
 import {
 	Timestamp,
 	arrayUnion,
+	deleteField,
 	doc,
 	getDoc,
 	serverTimestamp,
@@ -124,6 +125,7 @@ const Composebar = () => {
 		await updateDoc(doc(db, 'userChats', data.user.uid), {
 			[data.chatId + '.lastMessage']: msg,
 			[data.chatId + '.date']: serverTimestamp(),
+			[data.chatId + ".chatDeleted"]: deleteField(),
 		})
 
 		setInputText('')

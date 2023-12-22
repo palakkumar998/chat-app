@@ -1,6 +1,7 @@
 import { db } from '@/Firebase/firebase'
 import {
 	collection,
+	deleteField,
 	doc,
 	getDoc,
 	getDocs,
@@ -97,6 +98,9 @@ const Search = () => {
 				})
 			} else {
 				// chat document  exists
+				await updateDoc(doc(db, 'userChats', currentUser.uid), {
+					[combinedId + '.chatDeleted']: deleteField(),
+				})
 			}
 			setUser(null)
 			setUserName('')

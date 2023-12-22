@@ -4,6 +4,7 @@ import { useAuth } from '@/Context/authContext'
 import { userChatContext } from '@/Context/ChatContext'
 import Avatar from '../Avatar'
 import {
+	deleteField,
 	doc,
 	getDoc,
 	serverTimestamp,
@@ -12,8 +13,6 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/Firebase/firebase'
 import Search from '../Search'
-
-
 
 const UserPopup = (props) => {
 	const { currentUser } = useAuth()
@@ -69,6 +68,9 @@ const UserPopup = (props) => {
 				})
 			} else {
 				// chat document  exists
+				await updateDoc(doc(db, 'userChats', currentUser.uid), {
+					[combinedId + '.chatDeleted']: deleteField(),
+				})
 			}
 			dispatch({ type: 'CHANGE_USER', payload: user })
 			props.onHide()
@@ -78,13 +80,14 @@ const UserPopup = (props) => {
 	}
 	return (
 		<PopupWrapper {...props}>
-			<Search/>
+			<Search />
 			<div className="mt-5 flex flex-col gap-2 grow relative overflow-auto scrollbar ">
 				<div className="absolute w-full">
 					{users &&
 						Object.values(users).map((user) => (
 							// eslint-disable-next-line react/jsx-key
 							<div
+								key={user.id}
 								className="flex items-center gap-4 rounded-xl hover:bg-c5 py-2 px-4 cursor-pointer"
 								onClick={() => handleSelect(user)}
 							>

@@ -29,6 +29,7 @@ const Messages = () => {
 		const chatContainer = ref.current
 		chatContainer.scrollTop = chatContainer.scrollHeight
 	}
+	console.log(messages);
 
 	return (
 		<div
@@ -40,7 +41,7 @@ const Messages = () => {
 					return (
 						m?.deletedInfo?.[currentUser.uid] !== DELETED_FOR_ME &&
 						!m?.deletedInfo?.deletedForEveryone &&
-						!m?.deletedInfo?.[currentUser.uid]
+						!m?.deleteChatInfo?.[currentUser.uid]
 					)
 				})
 				?.map((m) => {

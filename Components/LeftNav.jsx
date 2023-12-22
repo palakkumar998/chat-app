@@ -14,6 +14,7 @@ import UserPopup from './popups/UserPopup'
 //?IMPORTING FROM CONTEXT
 import { useAuth } from '@/Context/authContext'
 import { profileColors } from '@/utils/constants'
+import { userChatContext } from '@/Context/ChatContext'
 //?IMPORTING FROM FIREBASE/FIRESTORE/STORAGE/AUTH
 import { doc, updateDoc } from 'firebase/firestore'
 import { db, auth, storage } from '@/Firebase/firebase'
@@ -68,11 +69,11 @@ const LeftNav = () => {
 						})
 						setNameEdited(false)
 					}
-					if (type === 'color') {
-						await updateProfile(authUser, {
-							color: value,
-						})
-					}
+					// if (type === 'color') {
+					// 	await updateProfile(authUser, {
+					// 		color: value,
+					// 	})
+					// }
 				},
 				{
 					pending: 'Profile Updating..',
@@ -123,7 +124,7 @@ const LeftNav = () => {
 
 	//?-----------> / DISPLAY NAME & PREVENT UNUSAUL EDITING IN USER NAME /<-----------//
 	const onkeyup = (event) => {
-		if (event.target.innertext !== currentUser.displayName) {
+		if (event.target.innertext.trim() !== currentUser.displayName) {
 			// name edited
 			setNameEdited(true)
 		} else {
@@ -223,12 +224,12 @@ const LeftNav = () => {
 					{/*//?---------------> / MAPPING COLORS TO PROFILE USING MAP FUNCTION /<---------------------*/}
 					{profileColors.map((color, index) => (
 						<span
-							className="w-10 h-10 flex rounded-full items-center justify-center cursor-pointer transition-transform hover:scale-125  "
 							key={index}
+							className="w-10 h-10 flex rounded-full items-center justify-center cursor-pointer transition-transform hover:scale-125  "
 							style={{ backgroundColor: color }}
-							onClick={() => {
+							onClick={() => 
 								handleUpdateProfile('color', color)
-							}}
+							}
 						>
 							{color === currentUser.color && (
 								<BiCheck size={24} />
@@ -270,7 +271,7 @@ const LeftNav = () => {
 			)}
 
 			<div
-				className={`flex gap-5 rounded-full ${
+				className={`flex gap-5 ${
 					editProfile ? 'ml-5' : 'flex-col items-center '
 				}`}
 			>

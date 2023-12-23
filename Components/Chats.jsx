@@ -109,7 +109,7 @@ const Chats = () => {
 
 							if (firstChat) {
 								const user = users[firstChat?.userInfo?.uid]
-								
+
 								handleSelect(user)
 								const chatId =
 									currentUser.uid > user.uid
@@ -122,7 +122,7 @@ const Chats = () => {
 					}
 				}
 			)
-			return () => unsub();
+			return () => unsub()
 		}
 
 		currentUser.uid && getChats()
@@ -187,8 +187,6 @@ const Chats = () => {
 			<ul className="flex flex-col w-full my-5 gap-[5px]">
 				{Object.keys(users || {}).length > 0 &&
 					filteredChats?.map((chat) => {
-						const user = users[chat[1]?.userInfo?.uid]
-
 						//?---->/ Date logic /<----------//
 						const timestamp = new Timestamp(
 							chat[1].date?.seconds,
@@ -196,13 +194,16 @@ const Chats = () => {
 						)
 						const date = timestamp.toDate()
 
+						const user = users[chat[1].userInfo.uid]
+
 						return (
 							<>
 								<li
 									key={chat[0]}
+									id={chat[0]}
 									onClick={() => handleSelect(user, chat[0])}
 									className={`h-[90px] flex items-center gap-4 rounded-2xl hover:bg-c1 p-4 cursor-pointer ${
-										selectedChat?.uid === user?.uid
+										selectedChat?.uid === user.uid
 											? 'bg-c1'
 											: ''
 									}`}

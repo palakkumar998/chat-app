@@ -85,7 +85,7 @@ const Message = ({ message }) => {
 					className="mb-4"
 				/>
 				<div
-					className={`group flex  gap-4 p-3 rounded-xl relative break-all ${
+					className={`group flex  gap-4 p-4 rounded-xl relative break-all ${
 						self ? 'rounded-br-sm bg-c5 ' : 'rounded-bl-sm bg-c1'
 					} `}
 				>

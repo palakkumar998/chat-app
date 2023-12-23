@@ -172,7 +172,7 @@ const Message = ({ message }) => {
 			</div>
 
 			<div
-				className={`flex relative bottom-5 items-end ${
+				className={`flex relative bottom-6 items-end ${
 					self ? 'justify-start flex-row-reverse mr-12' : 'ml-12'
 				}`}
 			>

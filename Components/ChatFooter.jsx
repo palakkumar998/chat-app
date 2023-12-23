@@ -8,6 +8,7 @@ import ClickAwayListener from 'react-click-away-listener'
 import { userChatContext } from '@/Context/ChatContext'
 import { IoClose } from 'react-icons/io5'
 import { MdDeleteForever } from 'react-icons/md'
+import { Image } from "next/image";
 
 const ChatFooter = () => {
 	const [showImojiPicker, setshowImojiPicker] = useState(false)
@@ -51,7 +52,7 @@ const ChatFooter = () => {
 		<div className="flex items-center p-2 rounded-xl bg-c1/[0.5] relative">
 			{attachmentPreview && (
 				<div className="absolute w-[200px] h-[200px] bottom-16 bg-c1 left-0 p-2 rounded-xl shadow-xl">
-					<img src={attachmentPreview} />
+					<Image src={attachmentPreview} />
 					<div
 						className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center absolute -right-2 -top-2 hover:cursor-pointer"
 						onClick={() => {

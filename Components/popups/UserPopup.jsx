@@ -1,7 +1,5 @@
 import React from 'react'
 import PopupWrapper from './PopupWrapper'
-import { useAuth } from '@/Context/authContext'
-import { userChatContext } from '@/Context/ChatContext'
 import Avatar from '../Avatar'
 import {
 	deleteField,
@@ -13,6 +11,9 @@ import {
 } from 'firebase/firestore'
 import { db } from '@/Firebase/firebase'
 import Search from '../Search'
+
+import { useAuth } from '@/Context/authContext'
+import { userChatContext } from '@/Context/ChatContext'
 
 const UserPopup = (props) => {
 	const { currentUser } = useAuth()

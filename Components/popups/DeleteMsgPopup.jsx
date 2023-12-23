@@ -1,15 +1,10 @@
 import React from 'react'
 import PopupWrapper from './PopupWrapper'
-import { useAuth } from '@/Context/authContext'
-import { userChatContext } from '@/Context/ChatContext'
+
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from '@/utils/constants'
 
-
 const DeleteMsgPopup = (props) => {
-	const { currentUser } = useAuth()
-	const { users, dispatch } = userChatContext()
-
 	return (
 		<PopupWrapper {...props}>
 			<div className="mt-10 mb-5">
@@ -28,10 +23,12 @@ const DeleteMsgPopup = (props) => {
 
 					{props.self && (
 						<button
-							onClick={() => props.deleteMessage(DELETED_FOR_EVERYONE)}
+							onClick={() =>
+								props.deleteMessage(DELETED_FOR_EVERYONE)
+							}
 							className=" bg-blue-500 py-2 px-4 text-sm rounded-md text-white hover:bg-blue-700 hover:text-white"
 						>
-							Delete for Everyone 
+							Delete for Everyone
 						</button>
 					)}
 					<button

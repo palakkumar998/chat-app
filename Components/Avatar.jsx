@@ -3,6 +3,7 @@ import React from 'react'
 
 
 const Avatar = ({ size, user, onClick }) => {
+
 	//?---------------->?/ CUSTOM SIZE CLASSES /<-----------------//
 	const s =
 		size === 'small'
@@ -32,11 +33,13 @@ const Avatar = ({ size, user, onClick }) => {
 			: size === 'xx-large'
 			? 'text-4xl'
 			: 'text-base'
+			
 
 	return (
 		<div
 			className={`${c} rounded-full flex items-center justify-center text-base shrink-0 relative `}
 			style={{ backgroundColor: user.color }}
+			
 			onClick={onClick}
 		>
 			{/* //?----------->/ ONLINE STATUS OF USER /<-----------------*/}
